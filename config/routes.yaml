@@ -1,3 +1,27 @@
 authentication_token:
     path: /api/login_check
     methods: ['POST']
+
+#get profils
+get_profils:
+    path: /api/admin/profils
+    methods: ['GET']
+    controller: App\Controller\ProfilController::getProfils
+
+#get les users d4un profil
+get_users_profil:
+    path: /api/admin/profils/{id}/users
+    methods: ['GET']
+    controller: App\Controller\ProfilController::get_users_du_profis
+
+#get un profil
+get_profil:
+    path: /api/admin/profils/{id}
+    methods: ['GET']
+    controller: App\Controller\ProfilController::getProfil
+
+#add un profil
+add_profil:
+    path: /api/admin/profils
+    methods: ['POST']
+    controller: App\Controller\ProfilController::create

@@ -2,13 +2,48 @@
 
 namespace App\Entity;
 
-use App\Repository\ProfilRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ProfilRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ProfilRepository::class)
+ * 
+ * @ApiResource(
+ *  collectionOperations={
+ *      "attributs"={
+ *          "security"="is_Granted('ROLE_ADMIN')",
+ *          "security_message"="vous n'avez pas acces a cette ressource"
+ *      },
+ * 
+ *      "get_profils"={
+ *          "route_name"="get_profils",
+ *          "method"="GET"
+ *       },
+ * 
+ *      "add_profils"={
+ *          "route_name"="add_profils",
+ *          "method"="POST"
+ *       },
+ *  },
+ * 
+ *  itemOperations={
+ *   "get"={},
+ *    "get_users_profil"={
+ *          "route_name"="get_users_profil",
+ *          "method"="GET"
+ *     },
+ * 
+ *    "get_profil"={
+ *          "route_name"="get_profil",
+ *          "method"="GET"
+ *     },
+ *  },
+ * )
  */
 class Profil
 {
@@ -16,16 +51,23 @@ class Profil
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * 
+     * @Groups({"p_read","p_users_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * 
+     * @Assert\NotBlank(message="le libelle est obligatoire")
+     * @Groups({"p_read","p_users_read"})
      */
     private $libelle;
 
     /**
      * @ORM\OneToMany(targetEntity=User::class, mappedBy="profil")
+     * 
+     * @Groups({"p_users_read"})
      */
     private $users;
 
