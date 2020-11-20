@@ -15,6 +15,6 @@ class GroupeCompetenceController extends AbstractController
     {
         $groupeCompetence = json_decode($request->getContent(), true);
         $helper->addGroupeCompetence($groupeCompetence);
-        return $this->json('added successfully');
+        return $this->json('groupe added successfully');
     }
 }
