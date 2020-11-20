@@ -6,11 +6,13 @@ use App\Entity\Apprenant;
 use App\Entity\Formateur;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
+use ApiPlatform\Core\Annotation\ApiFilter;
 use Doctrine\ORM\Mapping\DiscriminatorMap;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -20,8 +22,38 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\DiscriminatorColumn(name = "type", type = "string")
  * @ORM\DiscriminatorMap({"formateur"="Formateur","CM"= "CM", "apprenant"="Apprenant","admin"="User"})
  * 
+ * @ApiFilter(SearchFilter::class, properties={"archive": "partial"}),
+ * @ApiResource(
+ *      collectionOperations={
+ *          "get_users"={
+ *              "method"="GET",
+ *              "path"="/admin/users",
+ *              "normalization_context"= {"groups"={"u_read"}}
+ *          },
  * 
- * @ApiResource
+ *          "add_users"={
+ *              "method"="POST",
+ *              "route_name"="add_users"
+ *          },
+ *      },
+ * 
+ *      itemOperations={
+ *          "get_one_user"={
+ *              "method"="GET",
+ *              "path"="/admin/users/{id}"
+ *          },
+ * 
+ * *         "edit_user"={
+ *              "method"="PUT",
+ *              "path"="/admin/users/{id}"
+ *          },
+ * 
+ *          "archive_user"={
+ *              "method"="PUT",
+ *              "path"="/admin/users/{id}"
+ *          },
+ *      },
+ * )
  * 
  * @UniqueEntity("email",message="l'adresse email doit etre unique")
  */
@@ -31,6 +63,8 @@ class User implements UserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * 
+     * @Groups({"u_read"})
      */
     private $id;
 
@@ -39,7 +73,7 @@ class User implements UserInterface
      * @Assert\NotBlank(message="l'adresse email est obligatoire")
      * @Assert\Email(message="l'adresse email pas valide")
      * 
-     * @Groups({"p_users_read"})
+     * @Groups({"p_users_read","u_read"})
      */
     private $email;
 
@@ -58,7 +92,7 @@ class User implements UserInterface
      * 
      * @Assert\NotBlank(message="le firstname est obligatoire")
      * 
-     * @Groups({"p_users_read"})
+     * @Groups({"p_users_read","u_read"})
      */
     private $firstname;
 
@@ -67,7 +101,7 @@ class User implements UserInterface
      * 
      * @Assert\NotBlank(message="le lastname est obligatoire")
      * 
-     * @Groups({"p_users_read"})
+     * @Groups({"p_users_read","u_read"})
      */
     private $lastname;
 
@@ -83,6 +117,11 @@ class User implements UserInterface
      * 
      */
     private $archive;
+
+    /**
+     * @ORM\Column(type="blob", nullable=true)
+     */
+    private $avatar;
 
     public function getId(): ?int
     {
@@ -206,6 +245,18 @@ class User implements UserInterface
     public function setArchive(int $archive): self
     {
         $this->archive = $archive;
+
+        return $this;
+    }
+
+    public function getAvatar()
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar($avatar): self
+    {
+        $this->avatar = $avatar;
 
         return $this;
     }

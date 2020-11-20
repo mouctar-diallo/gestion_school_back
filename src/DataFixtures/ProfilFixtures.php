@@ -25,6 +25,7 @@ class ProfilFixtures extends Fixture
 
         for ($i=0; $i < count($profils); $i++) { 
             $profil = new Profil();
+            $profil->setArchive(0);
             $profil->setLibelle($profils[$i]);
 
             if ($profils[$i] == self::ADMIN_REFERENCE) {
