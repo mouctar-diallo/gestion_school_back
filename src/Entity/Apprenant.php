@@ -26,13 +26,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *         "get_one_apprenant"={
  *              "method"="GET",
  *              "path"="/apprenants/{id}",
- *              "security" = "is_granted('IS_AUTHENTICATED_FULLY')",
+ *              "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR') or is_granted('ROLE_CM') or object==user)",
  *          },
  * 
  * *          "put_one_apprenant"={
  *              "method"="PUT",
  *              "path"="/apprenants/{id}",
-*               "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR') or is_granted('ROLE_APPRENANT'))",
+*               "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR') or is_granted('ROLE_APPRENANT') or object==user)",
 *               "security_message" = "access denied",
  *          },
  *  }

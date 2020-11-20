@@ -15,53 +15,25 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 /**
  * @ORM\Entity(repositoryClass=ProfilRepository::class)
  * 
- * attributs={
- *      "security"= "is_Granted('ROLE_ADMIN')",
- *      "security_message"= "vous n'avez pas acces a cette ressource",
- *      "pagination_enabled"=false,
- *      "item_per_page"=3
- * },
  * 
  * @ApiFilter(SearchFilter::class, properties={"archive": "partial"})
 
  * @ApiResource(
+ *      attributes={
+ *          "security"= "is_granted('ROLE_ADMIN')",
+ *          "security_message"= "vous n'avez pas acces a cette ressource"
+ *      },
  * 
- *  collectionOperations={
- *      "get_profils"={
- *          "path"= "/admin/profils",
- *          "method"="GET",
- *          "normalization_context"={"groups"={"p_read"}},
- *       },
+ *      normalizationContext= {"groups"={"p_read"}},
+ *      routePrefix="/admin",
  * 
- *      "add_profils"={
- *          "method"="POST",
- *          "path"= "/admin/profils",
- *          "denormalization_context"={"groups"={"p_write"}}
- *       },
- *  },
- * 
- *  itemOperations={
- *   "get"={},
+ *  
+ * itemOperations={
+ *   "get"={},"put"={},"delete"={},
  *    "get_users_profil"={
  *          "method"="GET",
- *          "path"= "/admin/profils/{id}/users",
+ *          "path"= "/profils/{id}/users",
  *          "normalization_context"={"groups"={"p_users_read"}}
- *     },
- * 
- *    "get_profil"={
- *          "path"="/admin/profils/{id}",
- *          "method"="GET",
- *          "normalization_context"={"groups"={"p_read"}}
- *     },
- * 
- * *    "edit_profil"={
- *          "path"="/admin/profils/{id}",
- *          "method"="PUT"
- *     },
- * 
- *      "archive_profil"={
- *          "path"="/admin/profils/{id}",
- *          "method"="DELETE"
  *     },
  *  },
  * )

@@ -8,6 +8,8 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\GroupeCompetenceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @ORM\Entity(repositoryClass=GroupeCompetenceRepository::class)
@@ -31,6 +33,26 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          "route_name"="add_grp_competence"
  *     },
  *   },
+ * 
+ *      itemOperations={
+ *          "get_groupe"={
+ *              "method"="GET",
+ *              "path"="/admin/grpecompetences/{id}",
+ *              "normalization_context"={"groups"={"g_read"}}
+ *          },
+ * 
+ *           "get_competences"={
+ *              "method"="GET",
+ *              "path"="/admin/grpecompetences/{id}/competences",
+ *              "normalization_context"={"groups"={"grp_read"}}
+ *          },
+ * 
+ *          "edit_groupe"={
+ *              "method"="PUT",
+ *              "path"="/admin/grpecompetences/{id}",
+ *              "normalization_context"={"groups"={"grp_read"}}
+ *          },
+ *      }
  * )
  */
 class GroupeCompetence
@@ -40,15 +62,16 @@ class GroupeCompetence
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * 
-     * @Groups({"grp_read"})
+     * @Groups({"grp_read","g_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * 
-     * @Groups({"grp_read"})
+     * @Groups({"grp_read","g_read"})
      * 
+     * @Assert\NotBlank(message = "le libelle est obligatoire")
      */
     private $libelle;
 
@@ -56,6 +79,9 @@ class GroupeCompetence
      * @ORM\Column(type="string", length=255)
      * 
      * @Groups({"grp_read"})
+     * 
+     * 
+     * @Assert\NotBlank(message = "la description est obligatoire")
      */
     private $description;
 

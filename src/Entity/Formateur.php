@@ -16,14 +16,14 @@ use ApiPlatform\Core\Annotation\ApiResource;
  *          "get_one_formateur"={
  *              "method"="GET",
  *              "path"="/formateurs/{id}",
-*               "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR') or is_granted('ROLE_CM'))",
+*               "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR') or is_granted('ROLE_CM') or object==user)",
 *               "security_message" = "access denied",
  *          },
  * 
  *          "put_one_formateur"={
  *              "method"="PUT",
  *              "path"="/formateurs/{id}",
-*               "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR'))",
+*               "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR') or object==user)",
 *               "security_message" = "access denied",
  *          },
  *    }
