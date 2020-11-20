@@ -14,3 +14,15 @@ add_grp_competence:
     path: /api/admin/grpecompetences
     methods: ['POST']
     controller: App\Controller\GroupeCompetenceController::create
+
+#add un utilisateur
+add_niveaux:
+    path: /api/admin/competences
+    methods: ['POST']
+    controller: App\Controller\GroupeCompetenceController::addCompetenceAndLevels
+
+#add un utilisateur
+edit_niveaux:
+    path: /api/admin/competences/{id}
+    methods: ['PUT']
+    controller: App\Controller\GroupeCompetenceController::editLevel

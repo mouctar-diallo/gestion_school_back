@@ -12,7 +12,35 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *   collectionOperations={
+ *         "add_niveaux"={
+ *              "method"="POST",
+ *              "path"="/admin/competences",
+ *              "route_name"="add_niveaux"
+ *          },
+ * 
+ *      "competences_niveaux"={
+ *            "method"="GET",
+ *            "path"="/admin/competences",
+ *            "normalization_context"={"groups"={"niveaux_read"}}
+ *       },
+ *   }, 
+ * 
+ *  itemOperations={
+ *      "get_one_competence_and_levels"={
+ *          "method"="GET",
+ *          "path"="/admin/competences/{id}",
+ *          "normalization_context"={"groups"={"niveaux_read"}}
+ *      },
+ * 
+ *      "edit_niveaux"={
+ *          "method"="PUT",
+ *          "path"="/admin/competences/{id}",
+ *              "route_name"="edit_niveaux"
+ *      },
+ *  }    
+ * )
  * @ORM\Entity(repositoryClass=CompetenceRepository::class)
  */
 class Competence
@@ -22,14 +50,15 @@ class Competence
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * 
-     * @Groups({"c_read","grp_read"})
+     * @Groups({"c_read","grp_read","niveaux_read"})
+     * 
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * 
-     * @Groups({"c_read","grp_read"})
+     * @Groups({"c_read","grp_read","niveaux_read"})
      * 
      * @Assert\NotBlank(message="le libelle est obligatoire")
      */
@@ -40,9 +69,17 @@ class Competence
      */
     private $groupeCompetences;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Niveau::class, mappedBy="competence")
+     * 
+     * @Groups({"niveaux_read"})
+     */
+    private $niveau;
+
     public function __construct()
     {
         $this->groupeCompetences = new ArrayCollection();
+        $this->niveau = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -84,6 +121,36 @@ class Competence
     {
         if ($this->groupeCompetences->removeElement($groupeCompetence)) {
             $groupeCompetence->removeCompetence($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Niveau[]
+     */
+    public function getNiveau(): Collection
+    {
+        return $this->niveau;
+    }
+
+    public function addNiveau(Niveau $niveau): self
+    {
+        if (!$this->niveau->contains($niveau)) {
+            $this->niveau[] = $niveau;
+            $niveau->setCompetence($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNiveau(Niveau $niveau): self
+    {
+        if ($this->niveau->removeElement($niveau)) {
+            // set the owning side to null (unless already changed)
+            if ($niveau->getCompetence() === $this) {
+                $niveau->setCompetence(null);
+            }
         }
 
         return $this;
