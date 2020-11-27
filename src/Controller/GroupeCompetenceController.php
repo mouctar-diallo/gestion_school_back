@@ -31,11 +31,20 @@ class GroupeCompetenceController extends AbstractController
 
 
     //edit les niveaux d'un groupe de competence de
-    public function editLevel(Request $request,CompetenceHelper $helper)
+    public function editLevel($id,Request $request,CompetenceHelper $helper)
     {
         $niveaux = json_decode($request->getContent(), true);
-        $helper->editNiveau($niveaux);
+        $helper->editNiveau($id,$niveaux);
 
         return $this->json("edited", Response::HTTP_OK);
+    }
+
+    //put groupe competence d'un groupe
+    public function addOrRemoveCompetence($id,GroupeCompetenceHelper $helper,Request $request)
+    {
+        $postaman = json_decode($request->getContent());
+        $helper->putGroupeCompetence($postaman,$id,$request);
+
+        return $this->json("success");
     }
 }

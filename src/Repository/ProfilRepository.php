@@ -20,7 +20,7 @@ class ProfilRepository extends ServiceEntityRepository
     }
 
 
-    public function getLibelleProfil($value)
+    public function getProfil($value)
     {
         return $this->createQueryBuilder('p')
             ->andWhere('p.libelle = :val')

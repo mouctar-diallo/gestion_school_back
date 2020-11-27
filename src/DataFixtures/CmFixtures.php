@@ -2,7 +2,7 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\CM;
+use App\Entity\Cm;
 use Faker\Factory;
 use App\Entity\User;
 use App\Entity\Formateur;
@@ -26,7 +26,7 @@ class CmFixtures extends Fixture implements DependentFixtureInterface
 
         
         for ($i=0; $i < 2; $i++) { 
-            $formateur = (new CM())
+            $formateur = (new Cm())
               ->setFirstname($faker->firstname)
               ->setLastname($faker->lastname)
               ->setArchive(0)

@@ -17,7 +17,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
  *              "method"="GET",
  *              "path"="/formateurs/{id}",
 *               "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR') or is_granted('ROLE_CM') or object==user)",
-*               "security_message" = "access denied",
+*               "security_message" = "access deni      le       ed",
  *          },
  * 
  *          "put_one_formateur"={

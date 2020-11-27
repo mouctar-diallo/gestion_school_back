@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=ProfilRepository::class)
@@ -21,7 +22,9 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  * @ApiResource(
  *      attributes={
  *          "security"= "is_granted('ROLE_ADMIN')",
- *          "security_message"= "vous n'avez pas acces a cette ressource"
+ *          "security_message"= "vous n'avez pas acces a cette ressource",
+ *          "pagination_enabled"= true,
+ *          "pagination_items_per_page"= 2
  *      },
  * 
  *      normalizationContext= {"groups"={"p_read"}},
@@ -37,6 +40,8 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  *     },
  *  },
  * )
+ * 
+ *  @UniqueEntity("libelle",message="le libelle du profil doit etre unique")
  */
 class Profil
 {

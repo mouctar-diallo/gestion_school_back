@@ -50,7 +50,7 @@ class Competence
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * 
-     * @Groups({"c_read","grp_read","niveaux_read"})
+     * @Groups({"c_read","grp_read","niveaux_read","grpe_and_competences":"read","ref:read"})
      * 
      */
     private $id;
@@ -58,7 +58,7 @@ class Competence
     /**
      * @ORM\Column(type="string", length=255)
      * 
-     * @Groups({"c_read","grp_read","niveaux_read"})
+     * @Groups({"c_read","grp_read","niveaux_read","grpe_and_competences":"read","ref:read"})
      * 
      * @Assert\NotBlank(message="le libelle est obligatoire")
      */
@@ -70,7 +70,7 @@ class Competence
     private $groupeCompetences;
 
     /**
-     * @ORM\OneToMany(targetEntity=Niveau::class, mappedBy="competence")
+     * @ORM\OneToMany(targetEntity=Niveau::class, mappedBy="competence",cascade={"persist"})
      * 
      * @Groups({"niveaux_read"})
      */

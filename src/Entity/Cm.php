@@ -13,7 +13,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
  *  @ApiResource()
 
  */
-class CM extends User
+class Cm extends User
 {
     
 }

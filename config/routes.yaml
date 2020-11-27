@@ -9,13 +9,19 @@ add_users:
     methods: ['POST']
     controller: App\Controller\UserController::add
 
+#edit un utilisateur
+edit_users:
+    path: /api/admin/users/{id}
+    methods: ['POST']
+    controller: App\Controller\UserController::editUser
+
 #add un utilisateur
 add_grp_competence:
     path: /api/admin/grpecompetences
     methods: ['POST']
     controller: App\Controller\GroupeCompetenceController::create
 
-#add un utilisateur
+#add une comp
 add_niveaux:
     path: /api/admin/competences
     methods: ['POST']
@@ -26,3 +32,33 @@ edit_niveaux:
     path: /api/admin/competences/{id}
     methods: ['PUT']
     controller: App\Controller\GroupeCompetenceController::editLevel
+
+#creation groupe tags
+create_grpe_tags:
+   path: /api/admin/grptags
+   controller: App\Controller\GroupeTagsController::createGroupeTags
+   methods: ['POST']
+
+#competencess d'un groupe de competences d'un referentiel
+get_comp_gc_ref:
+   path:  /api/admin/referentiels/{id}/grpecompetences/{idgc}
+   controller: App\Controller\ReferentielController::getCompetences_gc_referentiels
+   methods: ['GET']
+
+#competencess d'un groupe de competences d'un referentiel
+edit_groupe:
+   path:  /api/admin/grpecompetences/{id}
+   controller: App\Controller\GroupeCompetenceController::addOrRemoveCompetence
+   methods: ['PUT']
+
+#competencess d'un groupe de competences d'un referentiel
+edit_grpe_tags:
+   path:  /api/admin/grptags/{id}
+   controller: App\Controller\GroupeTagsController::addOrRemoveTags
+   methods: ['PUT']
+
+#edit groupe de competences d'un referentiel
+edit_referentiel:
+   path:  /api/admin/referentiels/{id}
+   controller: App\Controller\ReferentielController::editReferentiels
+   methods: ['PUT']

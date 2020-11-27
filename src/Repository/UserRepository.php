@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -20,10 +21,12 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
     private $encode;
-    public function __construct(ManagerRegistry $registry,UserPasswordEncoderInterface $encode)
+    private $manager;
+    public function __construct(ManagerRegistry $registry,UserPasswordEncoderInterface $encode,EntityManagerInterface $manager)
     {
         parent::__construct($registry, User::class);
         $this->encode = $encode;
+        $this->manager = $manager;
     }
 
     /**
@@ -40,22 +43,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->flush();
     }
 
-    //les données communes des users
-    public function DataCommunUser($request,$user,$value,$profil)
-    {
-        $user->setFirstname($value['firstname']);
-        $user->setLastname($value['lastname']);
-        $user->setEmail($value['email']);
-        $user->setArchive(0);
-        $user->setProfil($profil);
-        $user->setPassword($this->encode->encodePassword($user,$value['password']));
-        //traitement image user
-        $image = $request->files->get("image");
-        $image = fopen($image->getRealPath(),"r+");
-        $user->setAvatar($image);
-
-        return $user;
-    }
     /*
     public function findOneBySomeField($value): ?User
     {

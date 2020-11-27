@@ -20,39 +20,47 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * 
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name = "type", type = "string")
- * @ORM\DiscriminatorMap({"formateur"="Formateur","CM"= "CM", "apprenant"="Apprenant","admin"="User"})
+ * @ORM\DiscriminatorMap({"formateur"="Formateur","CM"= "Cm", "apprenant"="Apprenant","admin"="User"})
  * 
  * @ApiFilter(SearchFilter::class, properties={"archive": "partial"}),
  * @ApiResource(
+ *      attributes={
+ *          "pagination_enabled"= true,
+ *          "pagination_items_per_page"=10
+ *      },
  *      collectionOperations={
  *          "get_users"={
  *              "method"="GET",
  *              "path"="/admin/users",
- *              "normalization_context"= {"groups"={"u_read"}}
+ *              "normalization_context"= {"groups"={"u_read"}},
  *          },
  * 
  *          "add_users"={
  *              "method"="POST",
- *              "route_name"="add_users"
+ *              "route_name"="add_users",
  *          },
+ *      
+ *         "edit_users"={
+ *              "method"="POST",
+ *              "route_name"="edit_users",
+ *          },
+ *         
  *      },
  * 
  *      itemOperations={
  *          "get_one_user"={
  *              "method"="GET",
- *              "path"="/admin/users/{id}"
- *          },
+ *              "path"="/admin/users/{id}",
+ *         },
  * 
- * *         "edit_user"={
- *              "method"="PUT",
- *              "path"="/admin/users/{id}"
- *          },
  * 
  *          "archive_user"={
  *              "method"="PUT",
  *              "path"="/admin/users/{id}"
  *          },
- *      },
+ * 
+ *      
+ *      }
  * )
  * 
  * @UniqueEntity("email",message="l'adresse email doit etre unique")
@@ -120,6 +128,8 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="blob", nullable=true)
+     * 
+     * @Groups({"u_read"})
      */
     private $avatar;
 
@@ -251,7 +261,12 @@ class User implements UserInterface
 
     public function getAvatar()
     {
-        return $this->avatar;
+        $avatar = $this->avatar;
+        if(!empty($avatar))
+        {
+            return (base64_encode(stream_get_contents($avatar)));
+        }
+        return $avatar;
     }
 
     public function setAvatar($avatar): self

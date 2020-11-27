@@ -5,17 +5,20 @@ use App\Entity\Competence;
 use App\Entity\GroupeCompetence;
 use App\Repository\CompetenceRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Repository\GroupeCompetenceRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 class GroupeCompetenceHelper 
 {
     private $repo;
     private $em;
-    public function __construct(EntityManagerInterface $em, CompetenceRepository $repo)
+    private $grouperepo;
+    public function __construct(EntityManagerInterface $em, CompetenceRepository $repo,GroupeCompetenceRepository $grouperepo)
     {
         $this->em = $em;
         $this->repo = $repo;
+        $this->grouperepo = $grouperepo;
     }
 
     public function addGroupeCompetence($groupejson)
@@ -37,8 +40,7 @@ class GroupeCompetenceHelper
                     //affectations
                     $c =  $this->repo->find($groupejson['competence'][$i]['id']);
                     if($c){
-                        $competence->setLibelle($c->getLibelle());
-                        $groupeCompetence->addCompetence($competence);
+                        $groupeCompetence->addCompetence($c);
                     }
 
                 }
@@ -46,5 +48,46 @@ class GroupeCompetenceHelper
                 $this->em->flush();
             }
         }
+    }
+
+
+    //put groupe competence into
+    public function putGroupeCompetence($postaman,$id,$request)
+    {
+        $groupecompetence= $this->grouperepo->find($id);
+        
+        if($postaman->option == "add")
+        {
+            if ($postaman->competence)
+            {
+                for ($i=0;$i<count($postaman->competence); $i++)
+                {
+                    if (isset($postaman->competence[$i]->id)){
+                        $comp = $this->repo->find($postaman->competence[$i]->id);
+                        $groupecompetence->addCompetence($comp);
+                    }else{
+                        $c = new Competence();
+                        if (isset($postaman->competence[$i]->libelle)) {
+                            $c->setLibelle($postaman->competence[$i]->libelle);
+                            $groupecompetence->addCompetence($c);
+                            $this->em->persist($c);
+                        }
+                    }
+                }
+                $this->em->flush();
+                return "success";
+            }
+        }else{
+            for ($i=0;$i<count($postaman->competence); $i++)
+            {
+                if (isset($postaman->competence[$i]->id)){
+                    $comp = $this->repo->find($postaman->competence[$i]->id);
+                    $groupecompetence->removeCompetence($comp);
+                    $this->em->flush();
+                    return "edit success";
+                }
+            }
+        }
+       
     }
 }

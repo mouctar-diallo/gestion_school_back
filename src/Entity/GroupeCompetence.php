@@ -9,6 +9,7 @@ use App\Repository\GroupeCompetenceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 
 /**
@@ -49,11 +50,13 @@ use Symfony\Component\Validator\Constraints as Assert;
  * 
  *          "edit_groupe"={
  *              "method"="PUT",
- *              "path"="/admin/grpecompetences/{id}",
- *              "normalization_context"={"groups"={"grp_read"}}
+ *              "normalization_context"={"groups"={"grp_read"}},
+ *              "route_name"="edit_groupe"
  *          },
  *      }
  * )
+ * 
+ *  @UniqueEntity("libelle",message="libelle du referentiel doit etre unique")
  */
 class GroupeCompetence
 {
@@ -62,14 +65,14 @@ class GroupeCompetence
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * 
-     * @Groups({"grp_read","g_read"})
+     * @Groups({"grp_read","g_read","referentiels":"read","grpe_and_competences":"read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * 
-     * @Groups({"grp_read","g_read"})
+     * @Groups({"grp_read","g_read","referentiels":"read","grpe_and_competences":"read","ref:read"})
      * 
      * @Assert\NotBlank(message = "le libelle est obligatoire")
      */
@@ -94,13 +97,19 @@ class GroupeCompetence
      * @ORM\ManyToMany(targetEntity=Competence::class, inversedBy="groupeCompetences", cascade={"persist"})
      * 
      * 
-     * @Groups({"c_read","grp_read"})
+     * @Groups({"c_read","grp_read","grpe_and_competences":"read","ref:read"})
      */
     private $competence;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Referentiels::class, mappedBy="groupeCompetences",cascade={"persist"})
+     */
+    private $referentiels;
 
     public function __construct()
     {
         $this->competence = new ArrayCollection();
+        $this->referentiels = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -164,6 +173,33 @@ class GroupeCompetence
     public function removeCompetence(Competence $competence): self
     {
         $this->competence->removeElement($competence);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Referentiels[]
+     */
+    public function getReferentiels(): Collection
+    {
+        return $this->referentiels;
+    }
+
+    public function addReferentiel(Referentiels $referentiel): self
+    {
+        if (!$this->referentiels->contains($referentiel)) {
+            $this->referentiels[] = $referentiel;
+            $referentiel->addGroupeCompetence($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReferentiel(Referentiels $referentiel): self
+    {
+        if ($this->referentiels->removeElement($referentiel)) {
+            $referentiel->removeGroupeCompetence($this);
+        }
 
         return $this;
     }
