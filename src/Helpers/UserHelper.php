@@ -19,10 +19,12 @@ class UserHelper
     private $encode;
     private $manager;
     private $request;
-    public function __construct(UserPasswordEncoderInterface $encode,EntityManagerInterface $manager)
+    private $mailer;
+    public function __construct(UserPasswordEncoderInterface $encode,EntityManagerInterface $manager,\Swift_Mailer $mailer)
     {
         $this->encode = $encode;
         $this->manager = $manager;
+        $this->mailer = $mailer;
     }
 
 
@@ -43,6 +45,9 @@ class UserHelper
         if($profil->getLibelle() == "APPRENANT"){
             $user->setAdresse($postman['adresse']);
             $user->setTelephone($postman['telephone']);
+            $this->sendMail($postman['email']);
+            
+            dd($this->sendMail($postman['email']));
         }
 
         $this->manager->persist($user);
@@ -50,7 +55,7 @@ class UserHelper
 
         return $user;
     }
-
+    //traitementImage
     public function traitementImage(Request $request)
     {
         $image = $request->files->get("image");
@@ -58,4 +63,20 @@ class UserHelper
 
         return $image;
     }
+
+     //fonction qui gere l'envoie de mail
+     public function sendMail($email)
+     {
+         $mail = (new \Swift_Message('candidature SONATEL ACADEMY'))
+         ->setFrom('moucfady@gmail.com')
+         ->setTo($email)
+         ->setBody(
+                     'Après les différentes étapes de sélection que tu as passé avec brio, 
+                     nous t’informons que ta candidature a été retenue pour intégrer la troisième 
+                     promotion de la première école de codage gratuite du Sénégal.
+                     Veuillez confirmez le mail pour etre retenu dans la plateforme
+                 ');
+ 
+         $this->mailer->send($mail);
+     }
 }

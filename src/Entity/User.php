@@ -93,7 +93,7 @@ class User implements UserInterface
      * 
      * @Assert\NotBlank(message="le mot de passe est obligatoire")
      */
-    private $password;
+    protected $password;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -102,7 +102,7 @@ class User implements UserInterface
      * 
      * @Groups({"p_users_read","u_read"})
      */
-    private $firstname;
+    protected $firstname;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -111,20 +111,20 @@ class User implements UserInterface
      * 
      * @Groups({"p_users_read","u_read"})
      */
-    private $lastname;
+    protected $lastname;
 
     /**
      * @ORM\ManyToOne(targetEntity=Profil::class, inversedBy="users")
      * 
      * @Assert\NotBlank(message="veuillez choisir un profil")
      */
-    private $profil;
+    protected $profil;
 
     /**
      * @ORM\Column(type="integer" , options={"default": 0})
      * 
      */
-    private $archive;
+    protected $archive;
 
     /**
      * @ORM\Column(type="blob", nullable=true)

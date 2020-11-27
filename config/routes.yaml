@@ -62,3 +62,14 @@ edit_referentiel:
    path:  /api/admin/referentiels/{id}
    controller: App\Controller\ReferentielController::editReferentiels
    methods: ['PUT']
+
+#delete apprenant in groupe
+retire_apprenant:
+   path:  /api/admin/groupes/{id}/apprenants/{idA}
+   controller: App\Controller\GroupesController::retireApprenantGroupe
+   methods: ['DELETE']
+
+add_promo:
+   path:  /api/admin/promo
+   controller: App\Controller\PromosController::addPromos
+   methods: ['POST']
