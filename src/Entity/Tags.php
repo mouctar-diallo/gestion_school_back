@@ -55,8 +55,14 @@ class Tags
      */
     private $groupeTags;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true, options={"default": 0})
+     */
+    private $archive;
+
     public function __construct()
     {
+        $this->archive = 0;
         $this->groupeTags = new ArrayCollection();
     }
 
@@ -112,6 +118,18 @@ class Tags
         if ($this->groupeTags->removeElement($groupeTag)) {
             $groupeTag->removeTag($this);
         }
+
+        return $this;
+    }
+
+    public function getArchive(): ?int
+    {
+        return $this->archive;
+    }
+
+    public function setArchive(?int $archive): self
+    {
+        $this->archive = $archive;
 
         return $this;
     }

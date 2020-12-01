@@ -67,13 +67,13 @@ class Referentiels
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * 
-     * @Groups({"referentiels":"read","grpe_and_competences":"read"})
+     * @Groups({"referentiels":"read","grpe_and_competences":"read","promo:read","grpe_principale:read","rfg:read","ref_promo_gc:read","gp_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"referentiels":"read","grpe_and_competences":"read","ref:read"})
+     * @Groups({"referentiels":"read","grpe_and_competences":"read","ref:read","promo:read","grpe_principale:read","rfg:read","ref_promo_gc:read","gp_read"})
      * 
      * @Assert\NotBlank(message="libelle obligatoire")
      */
@@ -91,7 +91,7 @@ class Referentiels
 
     /**
      * @ORM\ManyToMany(targetEntity=GroupeCompetence::class, inversedBy="referentiels",cascade={"persist"})
-     * @Groups({"referentiels":"read","grpe_and_competences":"read","ref:read"})
+     * @Groups({"referentiels":"read","grpe_and_competences":"read","ref:read","ref_promo_gc:read"})
      */
     private $groupeCompetences;
 
@@ -100,8 +100,14 @@ class Referentiels
      */
     private $promos;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true, options={"default": 0})
+     */
+    private $archive;
+
     public function __construct()
     {
+        $this->archive = 0;
         $this->groupeCompetences = new ArrayCollection();
         $this->promos = new ArrayCollection();
     }
@@ -197,6 +203,18 @@ class Referentiels
                 $promo->setReferentiels(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getArchive(): ?int
+    {
+        return $this->archive;
+    }
+
+    public function setArchive(?int $archive): self
+    {
+        $this->archive = $archive;
 
         return $this;
     }

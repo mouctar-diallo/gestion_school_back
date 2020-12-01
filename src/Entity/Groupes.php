@@ -7,9 +7,9 @@ use App\Repository\GroupesRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=GroupesRepository::class)
@@ -37,8 +37,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     "Create_groupes_apprennant_formateur"={
  *          "method"= "POST",
  *          "path"= "/admin/groupes",
- *          "security" = "(is_granted('ROLE_ADMIN') )"
- *          
+ *          "route_name"="add_groupe"          
  *      }
  * },
  * 
@@ -53,6 +52,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      "Ajouter_apprenant_groupe"={
  *          "method"= "PUT",
  *          "path"= "/admin/groupes/{id}",
+ *          "route_name"="add_app_groupe",
  *          "security" = "(is_granted('ROLE_ADMIN') )"
  *      },
  * 
@@ -64,7 +64,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  * )
  * 
  * @UniqueEntity("nom",message="le nom du groupe existe dejà")
-
  */
 class Groupes
 {
@@ -72,22 +71,30 @@ class Groupes
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * 
+     * @Groups({"promo:read","rfg:read","gp_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * 
      * @Assert\NotBlank(message = "le nom est obligatoire")
+     * 
+     * @Groups({"grp:read","apprenants:read","promo:read","rfg:read","gp_read"})
      */
     private $nom;
 
     /**
      * @ORM\Column(type="date")
+     * 
+     * @Groups({"grp:read","promo:read"})
      */
     private $dateCreation;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"grp:read"})
      */
     private $statut;
 
@@ -98,21 +105,33 @@ class Groupes
 
     /**
      * @ORM\ManyToOne(targetEntity=Promos::class, inversedBy="groupes")
+     * 
+     * @Groups({"grp:read","gp_read"})
      */
     private $promos;
 
     /**
      * @ORM\ManyToMany(targetEntity=Formateur::class, inversedBy="groupes")
+     * 
+     *  @Groups({"grp:read"})
      */
     private $formateurs;
 
     /**
      * @ORM\ManyToMany(targetEntity=Apprenant::class, inversedBy="groupes")
+     * 
+     *  @Groups({"grp:read","apprenants:read","promo:read","gp_read","gp_read"})
      */
     private $apprenants;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true, options={"default": 0})
+     */
+    private $archive;
+
     public function __construct()
     {
+        $this->archive = 0;
         $this->formateurs = new ArrayCollection();
         $this->apprenants = new ArrayCollection();
     }
@@ -226,6 +245,18 @@ class Groupes
     public function removeApprenant(Apprenant $apprenant): self
     {
         $this->apprenants->removeElement($apprenant);
+
+        return $this;
+    }
+
+    public function getArchive(): ?int
+    {
+        return $this->archive;
+    }
+
+    public function setArchive(?int $archive): self
+    {
+        $this->archive = $archive;
 
         return $this;
     }

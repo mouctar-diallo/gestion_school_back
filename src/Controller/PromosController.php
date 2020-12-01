@@ -8,6 +8,7 @@ use App\Entity\Apprenant;
 use App\Helpers\UserHelper;
 use App\Repository\ProfilRepository;
 use App\Repository\PromosRepository;
+use App\Repository\GroupesRepository;
 use App\Repository\ApprenantRepository;
 use App\Repository\FormateurRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -50,14 +51,10 @@ class PromosController extends AbstractController
 
         $infosjson = json_decode($request->getContent(),true);
        $promos = new Promos;
-          $promos->setLangue($infosjson['langue'])
-                  ->setTitre($infosjson['titre'])
-                  ->setDescription($infosjson['description'])
-                  ->setLieu($infosjson['lieu'])
-                  ->setFabrique($infosjson['fabrique'])
-                  ->setEtat($infosjson['etat'])
-                  ->setDateDebut(new \DateTime())
-                  ->setDateFinProvisoire(new \DateTime())
+          $promos->setLangue($infosjson['langue'])->setTitre($infosjson['titre'])
+                  ->setDescription($infosjson['description'])->setLieu($infosjson['lieu'])
+                  ->setFabrique($infosjson['fabrique'])->setEtat($infosjson['etat'])
+                  ->setDateDebut(new \DateTime())->setDateFinProvisoire(new \DateTime())
                   ->setDateFinReel(new \DateTime());
             //affectons un referentiel au promos
            $referentiel = $this->ref->find($infosjson['referentiels']['id']);
@@ -98,5 +95,77 @@ class PromosController extends AbstractController
 
         return $this->json($promos,Response::HTTP_CREATED);
 
+    }
+    
+    public function getApprenantGroupePromo($idp,$id,GroupesRepository $repo)
+    {
+        $groupeInPromo = $repo->ifGroupeInPromo($id,$idp);
+        if ($groupeInPromo) {
+            return $this->json($groupeInPromo,Response::HTTP_OK,[],['groups'=>"gp_read"]);
+        }
+        return $this->json(Response::HTTP_NOT_FOUND);
+    }
+
+    //add or delete apprenant in promo
+    public function putApprenants($id,Request $request)
+    {
+        $postman = json_decode($request->getContent(),true);
+        $promos = $this->promos->find($id);
+        if ($postman['option'] == "add") {
+            if ($promos && $postman['apprenants']) {
+                foreach ($postman['apprenants'] as $student){
+                    $apprenant = $this->apprenant->find($student['id']);
+                    $promos->addApprenant($apprenant);
+                }
+            }
+        }else{
+            if ($promos && $postman['apprenants']) {
+                foreach ($postman['apprenants'] as $student){
+                    $apprenant = $this->apprenant->find($student['id']);
+                    $promos->removeApprenant($apprenant);
+                }
+            }
+        }
+        $this->em->flush();
+        return $this->json($promos,Response::HTTP_OK);
+    }
+
+    //add or delete formateur in promo
+    public function putFormateurs($id,Request $request)
+    {
+        $postman = json_decode($request->getContent(),true);
+        $promos = $this->promos->find($id);
+        if ($postman['option'] == "add") {
+            if ($promos && $postman['formateurs']) {
+                foreach ($postman['formateurs'] as $teacher){
+                    $formateur = $this->formateur->find($teacher['id']);
+                    $promos->addFormateur($formateur);
+                }
+            }
+        }else{
+            if ($promos && $postman['formateurs']) {
+                foreach ($postman['formateurs'] as $teacher){
+                    $formateur = $this->formateur->find($teacher['id']);
+                    $promos->removeFormateur($formateur);
+                }
+            }
+        }
+        $this->em->flush();
+        return $this->json($promos,Response::HTTP_OK);
+    }
+
+    //edit statut group
+    public function editStatut($id,$idg,GroupesRepository $groupeRepo,Request $request)
+    {
+        $json = json_decode($request->getContent());
+        //testons si le groupe est dans la promo
+        $existe = $groupeRepo->ifGroupeInPromo($idg,$id);
+        if ($existe) {
+            $groupe = $groupeRepo->find($idg);
+            $groupe->setStatut($json->statut);
+            $this->em->flush();
+            return $this->json("statut modifié");
+        }
+        return $this->json("promo ou groupe inexistant");
     }
 }

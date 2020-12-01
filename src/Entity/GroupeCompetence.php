@@ -65,14 +65,14 @@ class GroupeCompetence
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * 
-     * @Groups({"grp_read","g_read","referentiels":"read","grpe_and_competences":"read"})
+     * @Groups({"grp_read","g_read","referentiels":"read","grpe_and_competences":"read","ref_promo_gc:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * 
-     * @Groups({"grp_read","g_read","referentiels":"read","grpe_and_competences":"read","ref:read"})
+     * @Groups({"grp_read","g_read","referentiels":"read","grpe_and_competences":"read","ref:read","ref_promo_gc:read"})
      * 
      * @Assert\NotBlank(message = "le libelle est obligatoire")
      */
@@ -97,7 +97,7 @@ class GroupeCompetence
      * @ORM\ManyToMany(targetEntity=Competence::class, inversedBy="groupeCompetences", cascade={"persist"})
      * 
      * 
-     * @Groups({"c_read","grp_read","grpe_and_competences":"read","ref:read"})
+     * @Groups({"c_read","grp_read","grpe_and_competences":"read","ref:read","ref_promo_gc:read"})
      */
     private $competence;
 
@@ -106,8 +106,14 @@ class GroupeCompetence
      */
     private $referentiels;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true, options={"default": 0})
+     */
+    private $archive;
+
     public function __construct()
     {
+        $this->archive = 0;
         $this->competence = new ArrayCollection();
         $this->referentiels = new ArrayCollection();
     }
@@ -200,6 +206,18 @@ class GroupeCompetence
         if ($this->referentiels->removeElement($referentiel)) {
             $referentiel->removeGroupeCompetence($this);
         }
+
+        return $this;
+    }
+
+    public function getArchive(): ?int
+    {
+        return $this->archive;
+    }
+
+    public function setArchive(?int $archive): self
+    {
+        $this->archive = $archive;
 
         return $this;
     }

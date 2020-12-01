@@ -7,17 +7,20 @@ use App\Entity\Competence;
 use App\Repository\NiveauRepository;
 use App\Repository\CompetenceRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class CompetenceHelper 
 {
     private $em;
     private $competenceRepository;
     private $niveauRepository;
-    public function __construct(EntityManagerInterface $em,CompetenceRepository $competenceRepository,NiveauRepository $niveauRepository)
+    private $serializer;
+    public function __construct(EntityManagerInterface $em,CompetenceRepository $competenceRepository,NiveauRepository $niveauRepository,SerializerInterface $serializer)
     {
         $this->em = $em;
         $this->competenceRepository = $competenceRepository;
         $this->niveauRepository = $niveauRepository;
+        $this->serializer = $serializer;
     }
 
     public function addCompetenceAndLevels($competences)

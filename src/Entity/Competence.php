@@ -50,7 +50,7 @@ class Competence
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * 
-     * @Groups({"c_read","grp_read","niveaux_read","grpe_and_competences":"read","ref:read"})
+     * @Groups({"c_read","grp_read","niveaux_read","grpe_and_competences":"read","ref:read","ref_promo_gc:read"})
      * 
      */
     private $id;
@@ -58,7 +58,7 @@ class Competence
     /**
      * @ORM\Column(type="string", length=255)
      * 
-     * @Groups({"c_read","grp_read","niveaux_read","grpe_and_competences":"read","ref:read"})
+     * @Groups({"c_read","grp_read","niveaux_read","grpe_and_competences":"read","ref:read","ref_promo_gc:read"})
      * 
      * @Assert\NotBlank(message="le libelle est obligatoire")
      */
@@ -76,8 +76,14 @@ class Competence
      */
     private $niveau;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true, options={"default": 0})
+     */
+    private $archive;
+
     public function __construct()
     {
+        $this->archive = 0;
         $this->groupeCompetences = new ArrayCollection();
         $this->niveau = new ArrayCollection();
     }
@@ -152,6 +158,18 @@ class Competence
                 $niveau->setCompetence(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getArchive(): ?int
+    {
+        return $this->archive;
+    }
+
+    public function setArchive(?int $archive): self
+    {
+        $this->archive = $archive;
 
         return $this;
     }

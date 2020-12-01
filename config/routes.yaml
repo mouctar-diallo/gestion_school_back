@@ -69,7 +69,47 @@ retire_apprenant:
    controller: App\Controller\GroupesController::retireApprenantGroupe
    methods: ['DELETE']
 
+#add groupe
+add_groupe:
+   path:  /api/admin/groupes
+   controller: App\Controller\GroupesController::addGroupe
+   methods: ['POST']
+
+#add groupe
+add_app_groupe:
+   path:  /api/admin/groupes/{id}
+   controller: App\Controller\GroupesController::addApprenanatGroupe
+   methods: ['PUT']
+
+#ajout promo
 add_promo:
    path:  /api/admin/promo
    controller: App\Controller\PromosController::addPromos
    methods: ['POST']
+
+app_groupe_promo:
+   path:  /api/admin/promo/{idp}/groupes/{id}/apprenants
+   controller: App\Controller\PromosController::getApprenantGroupePromo
+   methods: ['GET']
+
+#add or delete apprenants in promo
+apprenant_promo:
+   path:  /api/admin/promo/{id}/apprenants
+   controller: App\Controller\PromosController::putApprenants
+   methods: ['PUT']
+
+#add or delete formateurs in promo
+formateur_promo:
+   path:  /api/admin/promo/{id}/formateurs
+   controller: App\Controller\PromosController::putFormateurs
+   methods: ['PUT']
+
+   #add or delete formateurs in promo
+edit_statut:
+   path:  /api/admin/promo/{id}/groupes/{idg}
+   controller: App\Controller\PromosController::editStatut
+   methods: ['PUT']
+
+   
+
+   

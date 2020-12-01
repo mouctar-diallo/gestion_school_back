@@ -2,11 +2,12 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\PromosRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\PromosRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
@@ -14,16 +15,8 @@ use Doctrine\ORM\Mapping as ORM;
  * 
  *      "get_admin_promo"={
  *          "normalization_context"={"groups"={"promo:read"}},
- *          "method"= "GET",
+ *          "method" = "GET",
  *          "path"= "/admin/promo",
- *          "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR') or is_granted('ROLE_CM') )"
- *          
- *      },
- * 
- *      "get_admin_promo_principal"={
- *          "normalization_context"={"groups"={"grpe_principale:read"}},
- *          "method"= "GET",
- *          "path"= "/admin/promo/principal",
  *          "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR') or is_granted('ROLE_CM') )"
  *          
  *      },
@@ -36,6 +29,76 @@ use Doctrine\ORM\Mapping as ORM;
  *          
  *      },
  * },
+ * 
+ *  itemOperations={
+* 
+*       "referentiels_get_subresource" = {
+*               "method"= "GET",
+*               "normalization_context"={"groups"={"ref_promo_gc:read"}},
+*                "path" = "/admin/promo/{id}/referentiels",
+*                "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR') or is_granted('ROLE_CM'))",
+*                "security_message"= "vous n'avez pas accès"
+*          },
+*       "get_admin_promo_principal"={
+ *          "normalization_context"={"groups"={"grpe_principale:read"}},
+ *          "method" = "GET",
+ *          "path"= "/admin/promo/{id}/principal",
+ *          "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR') or is_granted('ROLE_CM') )" 
+ *      },
+ *     "get_admin_promo_id"={
+ *           "normalization_context"={"groups"={"rfg:read"}},
+ *          "method"= "GET",
+ *          "path"= "/admin/promo/{id}",
+ *          "security" = "(is_granted('ROLE_ADMIN'))"
+ *      },
+ *      
+ *      "modifier_promo_et_referentiel"={
+ *          "method"= "PUT",
+ *          "path"= "/admin/promo/{id}/referentiels",
+*            "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR') or is_granted('ROLE_CM'))",
+ *       },
+ * 
+ *      "Ajout_supprimer_formateurs"={
+ *          "method"= "PUT",
+ *          "route_name" = "formateur_promo",
+*            "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR'))",
+ *      },
+ * 
+ *      "Ajouter_supprimer_apprenant"={
+ *          "method"= "PUT",
+ *          "path"= "/admin/promo/{id}/apprenants",
+ *          "route_name"="apprenant_promo",
+ *          "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR'))",
+ *      },
+ *      "Modifier_statut_groupe"={
+ *            "method"= "PUT",
+ *             "route_name"="edit_statut",
+ *            "path"= "/admin/promo/{id}/groupes/{idg}",
+ *           "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR'))"
+ *      },
+ *       
+ *       "formateurs_get_subresource"= {
+ *              "normalization_context"={"groups"={"rfg:read"}},
+ *               "method"= "GET",
+ *               "path" = "/admin/promo/{id}/formateurs",
+ *                "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR') or is_granted('ROLE_CM'))",
+ *                "security_message"= "vous n'avez pas accès"
+ *          } ,
+ * 
+ *          "get_apprenant_groupe_dans_un_promo"= {
+ *               "method"= "GET",
+ *               "route_name"="app_groupe_promo",
+ *               "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR') or is_granted('ROLE_CM'))",
+ *               "security_message"= "vous n'avez pas accès",
+ *          },
+ * 
+ *          "get_apprenant_attente_dans_un_promo"= {
+ *               "method"= "GET",
+ *               "path" = "/admin/promo/{id}/apprenants/attente",
+ *               "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR') or is_granted('ROLE_CM'))",
+ *               "security_message"= "vous n'avez pas accès",
+ *          },
+ * }, 
  * )
  * @ORM\Entity(repositoryClass=PromosRepository::class)
  */
@@ -45,11 +108,15 @@ class Promos
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * 
+     * @Groups({"promo:read","grpe_principale:read","rfg:read","ref_promo_gc:read","gp_read"})
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255) 
+     * 
+     * @Groups({"grp:read"})
      */
     private $langue;
 
@@ -65,6 +132,7 @@ class Promos
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     *  @Groups({"grp:read","promo:read"})
      */
     private $lieu;
 
@@ -75,6 +143,7 @@ class Promos
 
     /**
      * @ORM\Column(type="string", length=255)
+     *  @Groups({"grp:read","promo:read","grpe_principale:read","rfg:read","ref_promo_gc:read","gp_read"})
      */
     private $fabrique;
 
@@ -100,23 +169,43 @@ class Promos
 
     /**
      * @ORM\OneToMany(targetEntity=Groupes::class, mappedBy="promos")
+     * 
+     * @Groups({"promo:read","rfg:read"})
      */
     private $groupes;
 
     /**
      * @ORM\ManyToOne(targetEntity=Referentiels::class, inversedBy="promos")
+     * 
+     * @Groups({"promo:read","grpe_principale:read","rfg:read","ref_promo_gc:read","gp_read"})
      */
     private $referentiels;
 
     /**
      * @ORM\ManyToMany(targetEntity=Formateur::class, inversedBy="promos", cascade={"persist"})
+     * 
+     * @Groups({"promo:read","grpe_principale:read","rfg:read"})
      */
     private $formateurs;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Apprenant::class, mappedBy="promos")
+     * 
+     * @Groups({"grpe_principale:read"})
+     */
+    private $apprenants;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true, options={"default": 0})
+     */
+    private $archive;
+
     public function __construct()
     {
+        $this->archive = 0;
         $this->groupes = new ArrayCollection();
         $this->formateurs = new ArrayCollection();
+        $this->apprenants = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -306,6 +395,48 @@ class Promos
     public function removeFormateur(Formateur $formateur): self
     {
         $this->formateurs->removeElement($formateur);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Apprenant[]
+     */
+    public function getApprenants(): Collection
+    {
+        return $this->apprenants;
+    }
+
+    public function addApprenant(Apprenant $apprenant): self
+    {
+        if (!$this->apprenants->contains($apprenant)) {
+            $this->apprenants[] = $apprenant;
+            $apprenant->setPromos($this);
+        }
+
+        return $this;
+    }
+
+    public function removeApprenant(Apprenant $apprenant): self
+    {
+        if ($this->apprenants->removeElement($apprenant)) {
+            // set the owning side to null (unless already changed)
+            if ($apprenant->getPromos() === $this) {
+                $apprenant->setPromos(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getArchive(): ?int
+    {
+        return $this->archive;
+    }
+
+    public function setArchive(?int $archive): self
+    {
+        $this->archive = $archive;
 
         return $this;
     }

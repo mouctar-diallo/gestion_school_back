@@ -19,22 +19,18 @@ class GroupesRepository extends ServiceEntityRepository
         parent::__construct($registry, Groupes::class);
     }
 
-    // /**
-    //  * @return Groupes[] Returns an array of Groupes objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function ifGroupeInPromo($idg,$idp)
     {
         return $this->createQueryBuilder('g')
-            ->andWhere('g.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('g.id', 'ASC')
-            ->setMaxResults(10)
+            ->innerJoin('g.promos', 'p')
+            ->andWhere('g.id = :val')
+            ->andWhere('p.id = :g')
+            ->setParameter('val', $idg)
+            ->setParameter('g', $idp)
             ->getQuery()
             ->getResult()
         ;
     }
-    */
 
     /*
     public function findOneBySomeField($value): ?Groupes

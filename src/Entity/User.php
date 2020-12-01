@@ -6,13 +6,11 @@ use App\Entity\Apprenant;
 use App\Entity\Formateur;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
-use ApiPlatform\Core\Annotation\ApiFilter;
 use Doctrine\ORM\Mapping\DiscriminatorMap;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -22,11 +20,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\DiscriminatorColumn(name = "type", type = "string")
  * @ORM\DiscriminatorMap({"formateur"="Formateur","CM"= "Cm", "apprenant"="Apprenant","admin"="User"})
  * 
- * @ApiFilter(SearchFilter::class, properties={"archive": "partial"}),
  * @ApiResource(
  *      attributes={
- *          "pagination_enabled"= true,
- *          "pagination_items_per_page"=10
+ *          "pagination_enabled"=true,
+ *          "pagination_items_per_page"=5
  *      },
  *      collectionOperations={
  *          "get_users"={
@@ -72,7 +69,7 @@ class User implements UserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * 
-     * @Groups({"u_read"})
+     * @Groups({"u_read","promo:read","rfg:read","gp_read"})
      */
     private $id;
 
@@ -81,7 +78,7 @@ class User implements UserInterface
      * @Assert\NotBlank(message="l'adresse email est obligatoire")
      * @Assert\Email(message="l'adresse email pas valide")
      * 
-     * @Groups({"p_users_read","u_read"})
+     * @Groups({"p_users_read","u_read","grp:read","apprenants:read","promo:read","grpe_principale:read","rfg:read","gp_read"})
      */
     private $email;
 
@@ -100,7 +97,7 @@ class User implements UserInterface
      * 
      * @Assert\NotBlank(message="le firstname est obligatoire")
      * 
-     * @Groups({"p_users_read","u_read"})
+     * @Groups({"p_users_read","u_read","grp:read","apprenants:read","promo:read","grpe_principale:read","rfg:read","gp_read"})
      */
     protected $firstname;
 
@@ -109,7 +106,7 @@ class User implements UserInterface
      * 
      * @Assert\NotBlank(message="le lastname est obligatoire")
      * 
-     * @Groups({"p_users_read","u_read"})
+     * @Groups({"p_users_read","u_read","grp:read","apprenants:read","promo:read","grpe_principale:read","rfg:read","gp_read"})
      */
     protected $lastname;
 
@@ -117,6 +114,8 @@ class User implements UserInterface
      * @ORM\ManyToOne(targetEntity=Profil::class, inversedBy="users")
      * 
      * @Assert\NotBlank(message="veuillez choisir un profil")
+     * 
+     *  @Groups({"grp:read"})
      */
     protected $profil;
 
@@ -129,7 +128,6 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="blob", nullable=true)
      * 
-     * @Groups({"u_read"})
      */
     private $avatar;
 

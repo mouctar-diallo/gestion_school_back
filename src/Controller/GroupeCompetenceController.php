@@ -20,7 +20,7 @@ class GroupeCompetenceController extends AbstractController
     }
 
 
-    //cree les  niveaux et rattache a un groupe de competence des
+    //cree les  niveaux et rattache a une competence 
     public function addCompetenceAndLevels(Request $request, CompetenceHelper $helperCompetence)
     {
         $competence = json_decode($request->getContent(), true);

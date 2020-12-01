@@ -45,14 +45,14 @@ class Apprenant extends User
     /**
      * @ORM\Column(type="string", length=255)
      * 
-     * @Groups({"u_read"})
+     * @Groups({"u_read","grp:read","apprenants:read","promo:read","gp_read"})
      */
     private $telephone;
 
     /**
      * @ORM\Column(type="string", length=255)
     *
-     * @Groups({"u_read"})
+     * @Groups({"u_read","grp:read","apprenants:read","promo:read","gp_read"})
      */
     private $adresse;
 
@@ -60,6 +60,11 @@ class Apprenant extends User
      * @ORM\ManyToMany(targetEntity=Groupes::class, mappedBy="apprenants")
      */
     private $groupes;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Promos::class, inversedBy="apprenants")
+     */
+    private $promos;
 
     public function __construct()
     {
@@ -120,6 +125,18 @@ class Apprenant extends User
         if ($this->groupes->removeElement($groupe)) {
             $groupe->removeApprenant($this);
         }
+
+        return $this;
+    }
+
+    public function getPromos(): ?Promos
+    {
+        return $this->promos;
+    }
+
+    public function setPromos(?Promos $promos): self
+    {
+        $this->promos = $promos;
 
         return $this;
     }
