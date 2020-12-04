@@ -13,7 +13,6 @@ use Doctrine\ORM\Mapping as ORM;
  * collectionOperations={
  * 
  *      "get_brief"={
-*          "normalization_context"={"groups"={"brief:read"}},
 *          "method"= "GET",
 *          "path"= "/formateurs/briefs",
 *          "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR') or is_granted('ROLE_CM') )"
