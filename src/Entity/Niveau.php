@@ -22,14 +22,13 @@ class Niveau
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * 
-     * 
-     * @Groups({"niveaux_read"})
+     * @Groups({"niveaux_read","brief:read","promo_gr_br"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"niveaux_read"})
+     * @Groups({"niveaux_read","brief:read","promo_gr_br"})
      * 
      * @Assert\NotBlank(message="le libelle est obligatoire")
      */

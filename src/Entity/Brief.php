@@ -2,21 +2,22 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\BriefRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\BriefRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
  * collectionOperations={
  * 
- *      "get_brief"={
+ *      "GET"={
+ *         "normalization_context"={"groups"={"brief:read"}},
 *          "method"= "GET",
-*          "path"= "/formateurs/briefs",
 *          "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR') or is_granted('ROLE_CM') )"
-*      },
+*       },
 *
 *      "get_brief_groupe_dans_une_promo"= {
 *               "method"= "GET",
@@ -102,36 +103,43 @@ class Brief
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"brief:read","br:read","brouillon"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"br:read","brouillon"})
      */
     private $langue;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"brief:read","br:read"})
      */
     private $nomBrief;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"br:read"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"br:read","brouillon"})
      */
     private $contexte;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"br:read","brouillon"})
      */
     private $modalitePedagogique;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"br:read","brouillon"})
      */
     private $critereEvaluation;
 
@@ -147,16 +155,19 @@ class Brief
 
     /**
      * @ORM\Column(type="date")
+     * @Groups({"brief:read","br:read"})
      */
     private $dateCreation;
 
     /**
      * @ORM\ManyToOne(targetEntity=Formateur::class, inversedBy="briefs")
+     * @Groups({"promo_gr_br"})
      */
     private $formateurs;
 
     /**
      * @ORM\ManyToMany(targetEntity=Tags::class, inversedBy="briefs")
+     * @Groups({"brief:read","promo_gr_br"})
      */
     private $tags;
 
@@ -172,21 +183,26 @@ class Brief
 
     /**
      * @ORM\ManyToMany(targetEntity=LivrableAttendues::class, inversedBy="briefs", cascade={"persist"})
+     * @Groups({"brief:read","promo_gr_br"})
      */
     private $livrableAttendues;
 
     /**
      * @ORM\OneToMany(targetEntity=Ressource::class, mappedBy="brief")
+     * @Groups({"brief:read","promo_gr_br"})
      */
     private $ressources;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * 
+     * @Groups({"brouillon"})
      */
     private $etatBrief;
 
     /**
      * @ORM\ManyToMany(targetEntity=Niveau::class, inversedBy="briefs")
+     * @Groups({"brief:read","promo_gr_br"})
      */
     private $niveaux;
 

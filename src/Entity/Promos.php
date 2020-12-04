@@ -109,7 +109,7 @@ class Promos
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * 
-     * @Groups({"promo:read","grpe_principale:read","rfg:read","ref_promo_gc:read","gp_read","promo_ref_app"})
+     * @Groups({"promo:read","grpe_principale:read","rfg:read","ref_promo_gc:read","gp_read","promo_ref_app","promo_gr_br"})
      */
     private $id;
 
@@ -143,7 +143,7 @@ class Promos
 
     /**
      * @ORM\Column(type="string", length=255)
-     *  @Groups({"grp:read","promo:read","grpe_principale:read","rfg:read","ref_promo_gc:read","gp_read","promo_ref_app"})
+     *  @Groups({"grp:read","promo:read","grpe_principale:read","rfg:read","ref_promo_gc:read","gp_read","promo_ref_app","promo_gr_br"})
      */
     private $fabrique;
 

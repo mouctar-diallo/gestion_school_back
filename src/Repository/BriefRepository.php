@@ -19,22 +19,17 @@ class BriefRepository extends ServiceEntityRepository
         parent::__construct($registry, Brief::class);
     }
 
-    // /**
-    //  * @return Brief[] Returns an array of Brief objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function ListeBrouillon($idf,$statut)
     {
-        return $this->createQueryBuilder('b')
-            ->andWhere('b.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('b.id', 'ASC')
-            ->setMaxResults(10)
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.formateurs= :val')
+            ->andWhere('u.etatBrief = :b')
+            ->setParameter('val', $idf)
+            ->setParameter('b', $statut)
             ->getQuery()
             ->getResult()
         ;
     }
-    */
 
     /*
     public function findOneBySomeField($value): ?Brief

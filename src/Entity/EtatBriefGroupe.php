@@ -2,9 +2,10 @@
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\EtatBriefGroupeRepository;
-use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource()
@@ -26,11 +27,15 @@ class EtatBriefGroupe
 
     /**
      * @ORM\ManyToOne(targetEntity=Brief::class, inversedBy="etatBriefGroupes")
+     * 
+     * @Groups({"promo_gr_br"})
      */
     private $brief;
 
     /**
      * @ORM\ManyToOne(targetEntity=Groupes::class, inversedBy="etatBriefGroupes")
+     * 
+     * @Groups({"promo_gr_br"})
      */
     private $groupe;
 

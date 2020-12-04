@@ -348,7 +348,7 @@ class BriefController extends AbstractController
            //affichons le brief et tout les groupes encours
            $encours = $etatBriefGroupe->ifStatutEncours($id);
            if ($encours) {
-                return $this->json($encours,Response::HTTP_OK,[],['groups'=>"promo_gr_br"]);
+                return $this->json($briefs,Response::HTTP_OK,[],['groups'=>"promo_gr_br"]);
             }
        }
        return $this->json("promo ou groupe inexistant");
@@ -360,7 +360,7 @@ class BriefController extends AbstractController
         $promos = $this->promoRepo->find($id);
        if ($promos) {  
             $briefs = $brief->listBriefDunePromo($id);
-            return $this->json($briefs,Response::HTTP_OK,[]);
+            return $this->json($briefs,Response::HTTP_OK,[],["groups"=>"br:read"]);
        }
        return $this->json("promo inexistant");
     }
@@ -368,7 +368,6 @@ class BriefController extends AbstractController
     // Recuperer les briefs brouilons d un formateur 
     public function getBriefBrouillon($id)
     {
-     
        $briefs = $this->briefRepo->ListeBrouillon($id,"brouillon");
         if ($briefs) {
             return $this->json($briefs,Response::HTTP_OK,[],['groups'=>"brouillon"]);

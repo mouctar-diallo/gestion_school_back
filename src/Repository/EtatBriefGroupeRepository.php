@@ -19,23 +19,18 @@ class EtatBriefGroupeRepository extends ServiceEntityRepository
         parent::__construct($registry, EtatBriefGroupe::class);
     }
 
-    // /**
-    //  * @return EtatBriefGroupe[] Returns an array of EtatBriefGroupe objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('e')
-            ->andWhere('e.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('e.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
+        //permet de verifier si le groupe se troupe dans la promo
+        public function ifStatutEncours($idgroupe)
+        {
+            return $this->createQueryBuilder('u')
+                ->andWhere('u.statut = :s')
+                ->andWhere('u.groupe = :g')
+                ->setParameter('s',"encours")
+                ->setParameter('g',$idgroupe)
+                ->getQuery()
+                ->getResult()
+            ;
+        }
     /*
     public function findOneBySomeField($value): ?EtatBriefGroupe
     {

@@ -2,11 +2,12 @@
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\LivrableAttenduesRepository;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource()
@@ -18,11 +19,13 @@ class LivrableAttendues
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"brief:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"brief:read","promo_gr_br"})
      */
     private $libelle;
 
@@ -39,12 +42,15 @@ class LivrableAttendues
     /**
      * @ORM\OneToMany(targetEntity=LivrableAttenduesApprenant::class, mappedBy="livrableAttendues")
      */
-    private $livrableAttendues;
+    private $livrableAttenduesApprenant;
+
+
+
 
     public function __construct()
     {
         $this->briefs = new ArrayCollection();
-        $this->livrableAttendues = new ArrayCollection();
+        $this->livrableAttenduesApprenant = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -106,30 +112,31 @@ class LivrableAttendues
     /**
      * @return Collection|LivrableAttenduesApprenant[]
      */
-    public function getLivrableAttendues(): Collection
+    public function getLivrableAttenduesApprenant(): Collection
     {
-        return $this->livrableAttendues;
+        return $this->livrableAttenduesApprenant;
     }
 
-    public function addLivrableAttendue(LivrableAttenduesApprenant $livrableAttendue): self
+    public function addLivrableAttenduesApprenant(LivrableAttenduesApprenant $livrableAttenduesApprenant): self
     {
-        if (!$this->livrableAttendues->contains($livrableAttendue)) {
-            $this->livrableAttendues[] = $livrableAttendue;
-            $livrableAttendue->setLivrableAttendues($this);
+        if (!$this->livrableAttenduesApprenant->contains($livrableAttenduesApprenant)) {
+            $this->livrableAttenduesApprenant[] = $livrableAttenduesApprenant;
+            $livrableAttenduesApprenant->setLivrableAttendues($this);
         }
 
         return $this;
     }
 
-    public function removeLivrableAttendue(LivrableAttenduesApprenant $livrableAttendue): self
+    public function removeLivrableAttenduesApprenant(LivrableAttenduesApprenant $livrableAttenduesApprenant): self
     {
-        if ($this->livrableAttendues->removeElement($livrableAttendue)) {
+        if ($this->livrableAttenduesApprenant->removeElement($livrableAttenduesApprenant)) {
             // set the owning side to null (unless already changed)
-            if ($livrableAttendue->getLivrableAttendues() === $this) {
-                $livrableAttendue->setLivrableAttendues(null);
+            if ($livrableAttenduesApprenant->getLivrableAttendues() === $this) {
+                $livrableAttenduesApprenant->setLivrableAttendues(null);
             }
         }
 
         return $this;
     }
+
 }

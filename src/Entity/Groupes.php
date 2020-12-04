@@ -72,7 +72,7 @@ class Groupes
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * 
-     * @Groups({"promo:read","rfg:read","gp_read"})
+     * @Groups({"promo:read","rfg:read","gp_read","promo_gr_br"})
      */
     private $id;
 
@@ -81,7 +81,7 @@ class Groupes
      * 
      * @Assert\NotBlank(message = "le nom est obligatoire")
      * 
-     * @Groups({"grp:read","apprenants:read","promo:read","rfg:read","gp_read"})
+     * @Groups({"grp:read","apprenants:read","promo:read","rfg:read","gp_read","promo_gr_br"})
      */
     private $nom;
 
@@ -106,7 +106,7 @@ class Groupes
     /**
      * @ORM\ManyToOne(targetEntity=Promos::class, inversedBy="groupes")
      * 
-     * @Groups({"grp:read","gp_read"})
+     * @Groups({"grp:read","gp_read","promo_gr_br"})
      */
     private $promos;
 
@@ -120,7 +120,7 @@ class Groupes
     /**
      * @ORM\ManyToMany(targetEntity=Apprenant::class, inversedBy="groupes")
      * 
-     *  @Groups({"grp:read","apprenants:read","promo:read","gp_read","gp_read"})
+     *  @Groups({"grp:read","apprenants:read","promo:read","gp_read","gp_read","promo_gr_br"})
      */
     private $apprenants;
 
@@ -131,6 +131,8 @@ class Groupes
 
     /**
      * @ORM\OneToMany(targetEntity=EtatBriefGroupe::class, mappedBy="groupe")
+     * 
+     * @Groups({"promo_gr_br"})
      */
     private $etatBriefGroupes;
 

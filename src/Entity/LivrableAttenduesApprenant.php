@@ -2,9 +2,12 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\LivrableAttenduesApprenantRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Repository\LivrableAttenduesApprenantRepository;
 
 /**
  * @ApiResource()
@@ -25,14 +28,21 @@ class LivrableAttenduesApprenant
     private $url;
 
     /**
-     * @ORM\ManyToOne(targetEntity=LivrableAttendues::class, inversedBy="livrableAttendues")
-     */
-    private $livrableAttendues;
-
-    /**
      * @ORM\ManyToOne(targetEntity=Apprenant::class, inversedBy="livrableAttenduesApprenants")
      */
     private $apprenant;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=LivrableAttendues::class, inversedBy="livrableAttenduesApprenant")
+     */
+    private $livrableAttendues;
+
+  
+
+    public function __construct()
+    {
+       
+    }
 
     public function getId(): ?int
     {
@@ -51,18 +61,6 @@ class LivrableAttenduesApprenant
         return $this;
     }
 
-    public function getLivrableAttendues(): ?LivrableAttendues
-    {
-        return $this->livrableAttendues;
-    }
-
-    public function setLivrableAttendues(?LivrableAttendues $livrableAttendues): self
-    {
-        $this->livrableAttendues = $livrableAttendues;
-
-        return $this;
-    }
-
     public function getApprenant(): ?Apprenant
     {
         return $this->apprenant;
@@ -71,6 +69,18 @@ class LivrableAttenduesApprenant
     public function setApprenant(?Apprenant $apprenant): self
     {
         $this->apprenant = $apprenant;
+
+        return $this;
+    }
+
+    public function getLivrableAttendues(): ?LivrableAttendues
+    {
+        return $this->livrableAttendues;
+    }
+
+    public function setLivrableAttendues(?LivrableAttendues $livrableAttendues): self
+    {
+        $this->livrableAttendues = $livrableAttendues;
 
         return $this;
     }
