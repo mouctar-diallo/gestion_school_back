@@ -109,7 +109,7 @@ class Promos
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * 
-     * @Groups({"promo:read","grpe_principale:read","rfg:read","ref_promo_gc:read","gp_read"})
+     * @Groups({"promo:read","grpe_principale:read","rfg:read","ref_promo_gc:read","gp_read","promo_ref_app"})
      */
     private $id;
 
@@ -143,7 +143,7 @@ class Promos
 
     /**
      * @ORM\Column(type="string", length=255)
-     *  @Groups({"grp:read","promo:read","grpe_principale:read","rfg:read","ref_promo_gc:read","gp_read"})
+     *  @Groups({"grp:read","promo:read","grpe_principale:read","rfg:read","ref_promo_gc:read","gp_read","promo_ref_app"})
      */
     private $fabrique;
 
@@ -191,7 +191,7 @@ class Promos
     /**
      * @ORM\OneToMany(targetEntity=Apprenant::class, mappedBy="promos")
      * 
-     * @Groups({"grpe_principale:read"})
+     * @Groups({"grpe_principale:read","promo_ref_app"})
      */
     private $apprenants;
 
@@ -200,12 +200,24 @@ class Promos
      */
     private $archive;
 
+    /**
+     * @ORM\OneToMany(targetEntity=CompetencesValides::class, mappedBy="promos")
+     */
+    private $competencesvalides;
+
+    /**
+     * @ORM\OneToMany(targetEntity=BriefDuPromo::class, mappedBy="promos")
+     */
+    private $briefDuPromos;
+
     public function __construct()
     {
         $this->archive = 0;
         $this->groupes = new ArrayCollection();
         $this->formateurs = new ArrayCollection();
         $this->apprenants = new ArrayCollection();
+        $this->competencesvalides = new ArrayCollection();
+        $this->briefDuPromos = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -437,6 +449,66 @@ class Promos
     public function setArchive(?int $archive): self
     {
         $this->archive = $archive;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CompetencesValides[]
+     */
+    public function getCompetencesvalides(): Collection
+    {
+        return $this->competencesvalides;
+    }
+
+    public function addCompetencesvalide(CompetencesValides $competencesvalide): self
+    {
+        if (!$this->competencesvalides->contains($competencesvalide)) {
+            $this->competencesvalides[] = $competencesvalide;
+            $competencesvalide->setPromos($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCompetencesvalide(CompetencesValides $competencesvalide): self
+    {
+        if ($this->competencesvalides->removeElement($competencesvalide)) {
+            // set the owning side to null (unless already changed)
+            if ($competencesvalide->getPromos() === $this) {
+                $competencesvalide->setPromos(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|BriefDuPromo[]
+     */
+    public function getBriefDuPromos(): Collection
+    {
+        return $this->briefDuPromos;
+    }
+
+    public function addBriefDuPromo(BriefDuPromo $briefDuPromo): self
+    {
+        if (!$this->briefDuPromos->contains($briefDuPromo)) {
+            $this->briefDuPromos[] = $briefDuPromo;
+            $briefDuPromo->setPromos($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBriefDuPromo(BriefDuPromo $briefDuPromo): self
+    {
+        if ($this->briefDuPromos->removeElement($briefDuPromo)) {
+            // set the owning side to null (unless already changed)
+            if ($briefDuPromo->getPromos() === $this) {
+                $briefDuPromo->setPromos(null);
+            }
+        }
 
         return $this;
     }

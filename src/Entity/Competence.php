@@ -58,7 +58,7 @@ class Competence
     /**
      * @ORM\Column(type="string", length=255)
      * 
-     * @Groups({"c_read","grp_read","niveaux_read","grpe_and_competences":"read","ref:read","ref_promo_gc:read"})
+     * @Groups({"c_read","grp_read","niveaux_read","grpe_and_competences":"read","ref:read","ref_promo_gc:read","promo_ref_app"})
      * 
      * @Assert\NotBlank(message="le libelle est obligatoire")
      */
@@ -81,11 +81,17 @@ class Competence
      */
     private $archive;
 
+    /**
+     * @ORM\OneToMany(targetEntity=CompetencesValides::class, mappedBy="competence")
+     */
+    private $competencesvalides;
+
     public function __construct()
     {
         $this->archive = 0;
         $this->groupeCompetences = new ArrayCollection();
         $this->niveau = new ArrayCollection();
+        $this->competencesvalides = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -170,6 +176,36 @@ class Competence
     public function setArchive(?int $archive): self
     {
         $this->archive = $archive;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CompetencesValides[]
+     */
+    public function getCompetencesvalides(): Collection
+    {
+        return $this->competencesvalides;
+    }
+
+    public function addCompetencesvalide(CompetencesValides $competencesvalide): self
+    {
+        if (!$this->competencesvalides->contains($competencesvalide)) {
+            $this->competencesvalides[] = $competencesvalide;
+            $competencesvalide->setCompetence($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCompetencesvalide(CompetencesValides $competencesvalide): self
+    {
+        if ($this->competencesvalides->removeElement($competencesvalide)) {
+            // set the owning side to null (unless already changed)
+            if ($competencesvalide->getCompetence() === $this) {
+                $competencesvalide->setCompetence(null);
+            }
+        }
 
         return $this;
     }

@@ -78,7 +78,7 @@ class User implements UserInterface
      * @Assert\NotBlank(message="l'adresse email est obligatoire")
      * @Assert\Email(message="l'adresse email pas valide")
      * 
-     * @Groups({"p_users_read","u_read","grp:read","apprenants:read","promo:read","grpe_principale:read","rfg:read","gp_read"})
+     * @Groups({"p_users_read","u_read","grp:read","apprenants:read","promo:read","grpe_principale:read","rfg:read","gp_read","promo_ref_app"})
      */
     private $email;
 
@@ -97,7 +97,7 @@ class User implements UserInterface
      * 
      * @Assert\NotBlank(message="le firstname est obligatoire")
      * 
-     * @Groups({"p_users_read","u_read","grp:read","apprenants:read","promo:read","grpe_principale:read","rfg:read","gp_read"})
+     * @Groups({"p_users_read","u_read","grp:read","apprenants:read","promo:read","grpe_principale:read","rfg:read","gp_read","promo_ref_app"})
      */
     protected $firstname;
 
@@ -106,7 +106,7 @@ class User implements UserInterface
      * 
      * @Assert\NotBlank(message="le lastname est obligatoire")
      * 
-     * @Groups({"p_users_read","u_read","grp:read","apprenants:read","promo:read","grpe_principale:read","rfg:read","gp_read"})
+     * @Groups({"p_users_read","u_read","grp:read","apprenants:read","promo:read","grpe_principale:read","rfg:read","gp_read","promo_ref_app"})
      */
     protected $lastname;
 

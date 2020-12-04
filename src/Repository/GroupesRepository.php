@@ -32,15 +32,17 @@ class GroupesRepository extends ServiceEntityRepository
         ;
     }
 
-    /*
-    public function findOneBySomeField($value): ?Groupes
-    {
-        return $this->createQueryBuilder('g')
-            ->andWhere('g.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
+  //permet de verifier si l'apprenant se trouve dans le groupe
+  public function ifApprenantInGroupe($idapprenant,$idgroupe)
+  {
+      return $this->createQueryBuilder('u')
+          ->innerJoin('u.apprenants', 'p')
+          ->andWhere('u.id = :val')
+          ->andWhere('p.id = :a')
+          ->setParameter('a',$idapprenant)
+          ->setParameter('val', $idgroupe)
+          ->getQuery()
+          ->getResult()
+      ;
+  }
 }

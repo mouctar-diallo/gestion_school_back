@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\NiveauRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -56,6 +58,22 @@ class Niveau
      */
     private $competence;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=LivrablePartiel::class, mappedBy="niveaux")
+     */
+    private $livrablePartiels;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Brief::class, mappedBy="niveaux")
+     */
+    private $briefs;
+
+    public function __construct()
+    {
+        $this->livrablePartiels = new ArrayCollection();
+        $this->briefs = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -105,6 +123,60 @@ class Niveau
     public function setCompetence(?Competence $competence): self
     {
         $this->competence = $competence;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|LivrablePartiel[]
+     */
+    public function getLivrablePartiels(): Collection
+    {
+        return $this->livrablePartiels;
+    }
+
+    public function addLivrablePartiel(LivrablePartiel $livrablePartiel): self
+    {
+        if (!$this->livrablePartiels->contains($livrablePartiel)) {
+            $this->livrablePartiels[] = $livrablePartiel;
+            $livrablePartiel->addNiveau($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLivrablePartiel(LivrablePartiel $livrablePartiel): self
+    {
+        if ($this->livrablePartiels->removeElement($livrablePartiel)) {
+            $livrablePartiel->removeNiveau($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Brief[]
+     */
+    public function getBriefs(): Collection
+    {
+        return $this->briefs;
+    }
+
+    public function addBrief(Brief $brief): self
+    {
+        if (!$this->briefs->contains($brief)) {
+            $this->briefs[] = $brief;
+            $brief->addNiveau($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBrief(Brief $brief): self
+    {
+        if ($this->briefs->removeElement($brief)) {
+            $brief->removeNiveau($this);
+        }
 
         return $this;
     }

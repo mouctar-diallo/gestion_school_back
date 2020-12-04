@@ -105,11 +105,17 @@ class Referentiels
      */
     private $archive;
 
+    /**
+     * @ORM\OneToMany(targetEntity=CompetencesValides::class, mappedBy="referentiels")
+     */
+    private $competencesValides;
+
     public function __construct()
     {
         $this->archive = 0;
         $this->groupeCompetences = new ArrayCollection();
         $this->promos = new ArrayCollection();
+        $this->competencesValides = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -215,6 +221,36 @@ class Referentiels
     public function setArchive(?int $archive): self
     {
         $this->archive = $archive;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CompetencesValides[]
+     */
+    public function getCompetencesValides(): Collection
+    {
+        return $this->competencesValides;
+    }
+
+    public function addCompetencesValide(CompetencesValides $competencesValide): self
+    {
+        if (!$this->competencesValides->contains($competencesValide)) {
+            $this->competencesValides[] = $competencesValide;
+            $competencesValide->setReferentiels($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCompetencesValide(CompetencesValides $competencesValide): self
+    {
+        if ($this->competencesValides->removeElement($competencesValide)) {
+            // set the owning side to null (unless already changed)
+            if ($competencesValide->getReferentiels() === $this) {
+                $competencesValide->setReferentiels(null);
+            }
+        }
 
         return $this;
     }

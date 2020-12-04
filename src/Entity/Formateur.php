@@ -44,10 +44,22 @@ class Formateur extends User
      */
     private $promos;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Commentaire::class, mappedBy="formateur")
+     */
+    private $commentaire;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Brief::class, mappedBy="formateurs")
+     */
+    private $briefs;
+
     public function __construct()
     {
         $this->groupes = new ArrayCollection();
         $this->promos = new ArrayCollection();
+        $this->commentaire = new ArrayCollection();
+        $this->briefs = new ArrayCollection();
     }
 
     /**
@@ -99,6 +111,66 @@ class Formateur extends User
     {
         if ($this->promos->removeElement($promo)) {
             $promo->removeFormateur($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Commentaire[]
+     */
+    public function getCommentaire(): Collection
+    {
+        return $this->commentaire;
+    }
+
+    public function addCommentaire(Commentaire $commentaire): self
+    {
+        if (!$this->commentaire->contains($commentaire)) {
+            $this->commentaire[] = $commentaire;
+            $commentaire->setFormateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentaire(Commentaire $commentaire): self
+    {
+        if ($this->commentaire->removeElement($commentaire)) {
+            // set the owning side to null (unless already changed)
+            if ($commentaire->getFormateur() === $this) {
+                $commentaire->setFormateur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Brief[]
+     */
+    public function getBriefs(): Collection
+    {
+        return $this->briefs;
+    }
+
+    public function addBrief(Brief $brief): self
+    {
+        if (!$this->briefs->contains($brief)) {
+            $this->briefs[] = $brief;
+            $brief->setFormateurs($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBrief(Brief $brief): self
+    {
+        if ($this->briefs->removeElement($brief)) {
+            // set the owning side to null (unless already changed)
+            if ($brief->getFormateurs() === $this) {
+                $brief->setFormateurs(null);
+            }
         }
 
         return $this;

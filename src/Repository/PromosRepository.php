@@ -19,19 +19,15 @@ class PromosRepository extends ServiceEntityRepository
         parent::__construct($registry, Promos::class);
     }
 
- 
-  
-    
-
-    /*
-    public function findOneBySomeField($value): ?Promos
+    public function ifRefInPromo($idpromo,$idr)
     {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.id = :val')
+            ->andWhere('u.referentiels = :p')
+            ->setParameter('p',$idr)
+            ->setParameter('val',$idpromo  )
             ->getQuery()
-            ->getOneOrNullResult()
+            ->getResult()
         ;
     }
-    */
 }

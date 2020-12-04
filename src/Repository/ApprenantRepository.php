@@ -19,32 +19,16 @@ class ApprenantRepository extends ServiceEntityRepository
         parent::__construct($registry, Apprenant::class);
     }
 
-    // /**
-    //  * @return Apprenant[] Returns an array of Apprenant objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    
+    public function ifApprenantDansPromo($idpromo,$idapprenant)
     {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('a.id', 'ASC')
-            ->setMaxResults(10)
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.id = :val')
+            ->andWhere('u.promos = :p')
+            ->setParameter('p',$idpromo)
+            ->setParameter('val', $idapprenant)
             ->getQuery()
             ->getResult()
         ;
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Apprenant
-    {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

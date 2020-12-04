@@ -66,6 +66,29 @@ class Apprenant extends User
      */
     private $promos;
 
+    /**
+     * @ORM\OneToMany(targetEntity=ApprenantLivrablePartiel::class, mappedBy="apprenant")
+     */
+    private $apprenantLivrablePartiels;
+
+    /**
+     * @ORM\OneToMany(targetEntity=CompetencesValides::class, mappedBy="apprenant")
+     * 
+     * 
+     * @Groups({"promo_ref_app"})
+     */
+    private $competencesvalides;
+
+    /**
+     * @ORM\OneToMany(targetEntity=BriefApprenant::class, mappedBy="apprenant")
+     */
+    private $briefApprenant;
+
+    /**
+     * @ORM\OneToMany(targetEntity=LivrableAttenduesApprenant::class, mappedBy="apprenant")
+     */
+    private $livrableAttenduesApprenants;
+
     public function __construct()
     {
         $this->groupes = new ArrayCollection();
@@ -76,6 +99,10 @@ class Apprenant extends User
         $this->telephone = "telephone";
         $this->adresse = "adresse";
         $this->password = "password";
+        $this->apprenantLivrablePartiels = new ArrayCollection();
+        $this->competencesvalides = new ArrayCollection();
+        $this->briefApprenant = new ArrayCollection();
+        $this->livrableAttenduesApprenants = new ArrayCollection();
     }
 
     public function getTelephone(): ?string
@@ -137,6 +164,126 @@ class Apprenant extends User
     public function setPromos(?Promos $promos): self
     {
         $this->promos = $promos;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ApprenantLivrablePartiel[]
+     */
+    public function getApprenantLivrablePartiels(): Collection
+    {
+        return $this->apprenantLivrablePartiels;
+    }
+
+    public function addApprenantLivrablePartiel(ApprenantLivrablePartiel $apprenantLivrablePartiel): self
+    {
+        if (!$this->apprenantLivrablePartiels->contains($apprenantLivrablePartiel)) {
+            $this->apprenantLivrablePartiels[] = $apprenantLivrablePartiel;
+            $apprenantLivrablePartiel->setApprenant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeApprenantLivrablePartiel(ApprenantLivrablePartiel $apprenantLivrablePartiel): self
+    {
+        if ($this->apprenantLivrablePartiels->removeElement($apprenantLivrablePartiel)) {
+            // set the owning side to null (unless already changed)
+            if ($apprenantLivrablePartiel->getApprenant() === $this) {
+                $apprenantLivrablePartiel->setApprenant(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CompetencesValides[]
+     */
+    public function getCompetencesvalides(): Collection
+    {
+        return $this->competencesvalides;
+    }
+
+    public function addCompetencesvalide(CompetencesValides $competencesvalide): self
+    {
+        if (!$this->competencesvalides->contains($competencesvalide)) {
+            $this->competencesvalides[] = $competencesvalide;
+            $competencesvalide->setApprenant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCompetencesvalide(CompetencesValides $competencesvalide): self
+    {
+        if ($this->competencesvalides->removeElement($competencesvalide)) {
+            // set the owning side to null (unless already changed)
+            if ($competencesvalide->getApprenant() === $this) {
+                $competencesvalide->setApprenant(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|BriefApprenant[]
+     */
+    public function getBriefApprenant(): Collection
+    {
+        return $this->briefApprenant;
+    }
+
+    public function addBriefApprenant(BriefApprenant $briefApprenant): self
+    {
+        if (!$this->briefApprenant->contains($briefApprenant)) {
+            $this->briefApprenant[] = $briefApprenant;
+            $briefApprenant->setApprenant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBriefApprenant(BriefApprenant $briefApprenant): self
+    {
+        if ($this->briefApprenant->removeElement($briefApprenant)) {
+            // set the owning side to null (unless already changed)
+            if ($briefApprenant->getApprenant() === $this) {
+                $briefApprenant->setApprenant(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|LivrableAttenduesApprenant[]
+     */
+    public function getLivrableAttenduesApprenants(): Collection
+    {
+        return $this->livrableAttenduesApprenants;
+    }
+
+    public function addLivrableAttenduesApprenant(LivrableAttenduesApprenant $livrableAttenduesApprenant): self
+    {
+        if (!$this->livrableAttenduesApprenants->contains($livrableAttenduesApprenant)) {
+            $this->livrableAttenduesApprenants[] = $livrableAttenduesApprenant;
+            $livrableAttenduesApprenant->setApprenant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLivrableAttenduesApprenant(LivrableAttenduesApprenant $livrableAttenduesApprenant): self
+    {
+        if ($this->livrableAttenduesApprenants->removeElement($livrableAttenduesApprenant)) {
+            // set the owning side to null (unless already changed)
+            if ($livrableAttenduesApprenant->getApprenant() === $this) {
+                $livrableAttenduesApprenant->setApprenant(null);
+            }
+        }
 
         return $this;
     }

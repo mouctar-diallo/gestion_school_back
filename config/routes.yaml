@@ -110,6 +110,129 @@ edit_statut:
    controller: App\Controller\PromosController::editStatut
    methods: ['PUT']
 
+#init apprenant
+init_apprenat_competence:
+   path:  /api/promo/{id}/apprenants/initialisation
+   controller: App\Controller\LivrablePartielController::initialisation
+   methods: ['POST']
+
+#ajouter des fils de discustion et des commentaires formateur
+add_fil_discution:
+   path:  /api/formateurs/livrablepartiels/{id}/commentaires
+   controller: App\Controller\LivrablePartielController::addDiscutionCommentaire
+   methods: ['POST']
+
+#ajouter des fils de discustion et des commentaires apprenant
+add_fil_discution_apprenant:
+   path:  /api/apprenants/livrablepartiels/{id}/commentaires
+   controller: App\Controller\LivrablePartielController::addDiscutionCommentaire
+   methods: ['POST']
+
+#get_apprenant_collection_competence and niveaux
+get_apprenant_collection_competence:
+   path:  /api/formateurs/promo/{idp}/referentiel/{id}/competences
+   controller: App\Controller\LivrablePartielController::getCompetencesApprenants
+   methods: ['GET']
+
+# Recupere les competences d un apprenant d'une promo dans  un referentiel  
+get_apprenant_competences:
+   path:  /api/apprenant/{ida}/promo/{idp}/referentiel/{id}/competences
+   controller: App\Controller\LivrablePartielController::getCompetencesApprenant
+   methods: ['GET']
+
+#Recuperer les statistiques des apprenants
+get_apprenant_statistiques:
+   path:  /api/apprenant/{ida}/promo/{idp}/referentiel/{idr}/statistiques/briefs
+   controller: App\Controller\LivrablePartielController::getStatistiquesApprenant
+   methods: ['GET']
+
+#modifie le statut  d'un livrable partiel
+edit_statut_livrable_partiel:
+   path:  /api/apprenants/{idA}/livrablepartiels/{idL}
+   controller: App\Controller\LivrablePartielController::editStatutApprenantLivrablePartiel
+   methods: ['PUT']
+
+#add/delete livrables partiels d'un brief
+add_edit_liv_partiel_brief:
+   path:  /api/formateurs/promo/{idp}/brief/{id}/livrablepartiels
+   controller: App\Controller\LivrablePartielController::addDeleteLivrablPartielBriefs
+   methods: ['PUT']
+
+#get_collection_competence_statistiques
+get_collection_competence_statistiques:
+   path:  /api/formateurs/promo/{idp}/referentiel/{idr}/statistiques/competences
+   controller: App\Controller\LivrablePartielController::getCollectionCompetenceStatistiques
+   methods: ['GET']
+
+
+
+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+#permet de crée un brief
+create_brief:
+   path:  /api/formateurs/briefs
+   controller: App\Controller\BriefController::createBriefs
+   methods: ['POST']
+
+#permet de dupliquer un brief
+dupliquer_brief:
+   path:  /api/formateurs/briefs/{id}
+   controller: App\Controller\BriefController::dupliqueBrief
+   methods: ['POST']
+
+#permet de affecter un brief
+affecter_brief:
+   path:  /api/formateurs/promo/{idp}/brief/{id}/assignation
+   controller: App\Controller\BriefController::assignationBrief
+   methods: ['PUT']
+
+#permet de modifier un brief
+editer_brief:
+   path:  /api/formateurs/promo/{idp}/brief/{id}
+   controller: App\Controller\BriefController::EditBrief
+   methods: ['PUT']
+
+#permet de modifier un brief
+add_url_livrable:
+   path:  /api/apprenants/{id}/groupe/{idg}/livrables
+   controller: App\Controller\BriefController::addUrlLivrable
+   methods: ['POST']
+
+#recupere les briefs d'un grpe d'une promo  get_one_brief_dans_une_promo
+get_brief_groupe_dans_une_promo:
+   path:  /api/formateurs/promo/{idp}/groupe/{id}/briefs
+   controller: App\Controller\BriefController::getBriefDunGroupeDunePromotion
+   methods: ['GET']
+
+#recupere les briefs d'une promo
+get_brief_dans_une_promo:
+   path:  /api/formateurs/promos/{id}/briefs
+   controller: App\Controller\BriefController::getBriefDunePromotion
+   methods: ['GET']
+
+#recupere les briefs brouillons d'un formateur 
+get_brief_brouillon_formateur:
+   path:  /api/formateurs/{id}/briefs/brouillons
+   controller: App\Controller\BriefController::getBriefBrouillon
+   methods: ['GET']
+
+#recupere les briefs valides d'un formateur 
+get_brief_valide_formateur:
+   path:  /api/formateurs/{id}/briefs/valide
+   controller: App\Controller\BriefController::getBriefValide
+   methods: ['GET']
+
+#recupere un brief d'une promo  
+get_one_brief_dans_une_promo:
+   path:  /api/formateurs/promo/{idp}/briefs/{id}
+   controller: App\Controller\BriefController::getOneBriefPromo
+   methods: ['GET']
+
+#get_briefs_apprenants_dans_une_promo
+get_briefs_apprenants_dans_une_promo:
+   path:  /api/apprenants/promo/{id}/briefs
+   controller: App\Controller\BriefController::getBriefsApprenantsDunePromotion
+   methods: ['GET']
+
    
 
    
