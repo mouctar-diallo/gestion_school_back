@@ -63,6 +63,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *                "route_name" = "get_briefs_apprenants_dans_une_promo"
  *          },
  * 
+ *          "get_one_brief_by_apprenant"= {
+ *               "method"= "GET",
+ *               "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR') or is_granted('ROLE_CM') or is_granted('ROLE_APPRENANT'))",
+ *               "security_message"= "vous n'avez pas accès",
+ *               "route_name" = "get_one_brief_by_apprenant"
+ *          },
+ * 
  *      "apprenant_add_livrable_url"={
  *          "method" = "POST",
  *          "route_name" = "add_url_livrable",
@@ -103,19 +110,19 @@ class Brief
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"brief:read","br:read","brouillon"})
+     * @Groups({"brief:read","br:read","brouillon","promo_one_br","br_app_ass"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"br:read","brouillon"})
+     * @Groups({"br:read","brouillon","promo_one_br","br_app_ass"})
      */
     private $langue;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"brief:read","br:read"})
+     * @Groups({"brief:read","br:read","promo_one_br","br_app_ass"})
      */
     private $nomBrief;
 
@@ -155,19 +162,19 @@ class Brief
 
     /**
      * @ORM\Column(type="date")
-     * @Groups({"brief:read","br:read"})
+     * @Groups({"brief:read","br:read","br_app_ass"})
      */
     private $dateCreation;
 
     /**
      * @ORM\ManyToOne(targetEntity=Formateur::class, inversedBy="briefs")
-     * @Groups({"promo_gr_br"})
+     * @Groups({"promo_gr_br","promo_one_br","br_app_ass"})
      */
     private $formateurs;
 
     /**
      * @ORM\ManyToMany(targetEntity=Tags::class, inversedBy="briefs")
-     * @Groups({"brief:read","promo_gr_br"})
+     * @Groups({"brief:read","promo_gr_br","promo_one_br","br_app_ass"})
      */
     private $tags;
 
@@ -178,18 +185,19 @@ class Brief
 
     /**
      * @ORM\OneToMany(targetEntity=EtatBriefGroupe::class, mappedBy="brief")
+     * @Groups({"promo_one_br","br_app_ass"})
      */
     private $etatBriefGroupes;
 
     /**
      * @ORM\ManyToMany(targetEntity=LivrableAttendues::class, inversedBy="briefs", cascade={"persist"})
-     * @Groups({"brief:read","promo_gr_br"})
+     * @Groups({"brief:read","promo_gr_br","promo_one_br","br_app_ass"})
      */
     private $livrableAttendues;
 
     /**
      * @ORM\OneToMany(targetEntity=Ressource::class, mappedBy="brief")
-     * @Groups({"brief:read","promo_gr_br"})
+     * @Groups({"brief:read","promo_gr_br","promo_one_br","br_app_ass"})
      */
     private $ressources;
 
@@ -202,7 +210,7 @@ class Brief
 
     /**
      * @ORM\ManyToMany(targetEntity=Niveau::class, inversedBy="briefs")
-     * @Groups({"brief:read","promo_gr_br"})
+     * @Groups({"brief:read","promo_gr_br","promo_one_br"})
      */
     private $niveaux;
 

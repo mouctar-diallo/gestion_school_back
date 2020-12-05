@@ -276,7 +276,7 @@ class BriefController extends AbstractController
         if ($promo and $brief) {
             //archiver le brief
             if (isset($json->type) && $json->type== "archiver") {
-                $brief->setArchiver(1);
+                $brief->setArchive(1);
                 $this->em->flush();
                 return $this->json("archiver");
             }elseif (isset($json->type) && $json->type == "cloturer") {  
@@ -389,7 +389,6 @@ class BriefController extends AbstractController
     //recupere un brief d'une promo
     public function getOneBriefPromo($idp,$id,BriefDuPromoRepository $brief)
     {
-    
         $briefs = $brief->ifBriefInPromo($idp,$id);
         if ($briefs) {  
                 return $this->json($briefs,Response::HTTP_OK,[],['groups'=>"promo_one_br"]);
@@ -402,7 +401,7 @@ class BriefController extends AbstractController
         {   
             $promos = $this->promoRepo->find($id);
            if ($promos) {  
-            $briefs = $brief->listBriefAppDunePromo($id,"encours");
+            $briefs = $brief->listBriefAppDunePromo($id);
                 return $this->json($briefs,Response::HTTP_OK,[],["groups"=>"br_app_ass"]);
            }
            return $this->json("promo inexistant ou brief non assigne");

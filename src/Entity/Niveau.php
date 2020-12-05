@@ -22,13 +22,13 @@ class Niveau
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * 
-     * @Groups({"niveaux_read","brief:read","promo_gr_br"})
+     * @Groups({"niveaux_read","brief:read","promo_gr_br","promo_one_br"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"niveaux_read","brief:read","promo_gr_br"})
+     * @Groups({"niveaux_read","brief:read","promo_gr_br","promo_one_br"})
      * 
      * @Assert\NotBlank(message="le libelle est obligatoire")
      */
@@ -54,6 +54,7 @@ class Niveau
 
     /**
      * @ORM\ManyToOne(targetEntity=Competence::class, inversedBy="niveau",cascade={"persist"})
+     * @Groups({"promo_one_br"})
      */
     private $competence;
 

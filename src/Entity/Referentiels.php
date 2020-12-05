@@ -67,13 +67,13 @@ class Referentiels
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * 
-     * @Groups({"referentiels":"read","grpe_and_competences":"read","promo:read","grpe_principale:read","rfg:read","ref_promo_gc:read","gp_read"})
+     * @Groups({"referentiels":"read","grpe_and_competences":"read","promo:read","grpe_principale:read","rfg:read","ref_promo_gc:read","gp_read","br_app_ass"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"referentiels":"read","grpe_and_competences":"read","ref:read","promo:read","grpe_principale:read","rfg:read","ref_promo_gc:read","gp_read"})
+     * @Groups({"referentiels":"read","grpe_and_competences":"read","ref:read","promo:read","grpe_principale:read","rfg:read","ref_promo_gc:read","gp_read","br_app_ass"})
      * 
      * @Assert\NotBlank(message="libelle obligatoire")
      */

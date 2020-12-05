@@ -29,7 +29,7 @@ class BriefDuPromo
 
     /**
      * @ORM\ManyToOne(targetEntity=Brief::class, inversedBy="briefDuPromos")
-     * @Groups({"br:read"})
+     * @Groups({"br:read","promo_one_br","br_app_ass"})
      */
     private $brief;
 
@@ -45,6 +45,7 @@ class BriefDuPromo
 
     /**
      * @ORM\OneToMany(targetEntity=LivrablePartiel::class, mappedBy="briefDuPromo")
+     * @Groups({"promo_one_br"})
      */
     private $livrablePartiel;
 

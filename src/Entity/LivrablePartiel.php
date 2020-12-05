@@ -88,11 +88,13 @@ class LivrablePartiel
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"promo_one_br"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"promo_one_br"})
      */
     private $libelle;
 
@@ -108,11 +110,13 @@ class LivrablePartiel
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"promo_one_br"})
      */
     private $nbreRendue;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"promo_one_br"})
      */
     private $nbreCorrige;
 
@@ -128,6 +132,7 @@ class LivrablePartiel
 
     /**
      * @ORM\Column(type="date")
+     * @Groups({"promo_one_br"})
      */
     private $delai;
 

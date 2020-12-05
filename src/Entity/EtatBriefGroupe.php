@@ -35,7 +35,7 @@ class EtatBriefGroupe
     /**
      * @ORM\ManyToOne(targetEntity=Groupes::class, inversedBy="etatBriefGroupes")
      * 
-     * @Groups({"promo_gr_br"})
+     * @Groups({"promo_gr_br","promo_one_br","br_app_ass"})
      */
     private $groupe;
 

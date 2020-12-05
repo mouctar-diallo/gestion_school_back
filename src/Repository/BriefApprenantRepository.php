@@ -36,15 +36,15 @@ class BriefApprenantRepository extends ServiceEntityRepository
     }
     */
 
-    /*
-    public function findOneBySomeField($value): ?BriefApprenant
-    {
-        return $this->createQueryBuilder('b')
-            ->andWhere('b.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
+   // liste des briefs des apprennants d une promo 
+   public function listBriefAppDunePromo($idpromo)
+   {
+       return $this->createQueryBuilder('u')
+           ->innerJoin('u.briefDuPromo', 'br')
+           ->andWhere('br.promos= :val')
+           ->setParameter('val',$idpromo)
+           ->getQuery()
+           ->getResult()
+       ;
+   }
 }

@@ -109,19 +109,20 @@ class Promos
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * 
-     * @Groups({"promo:read","grpe_principale:read","rfg:read","ref_promo_gc:read","gp_read","promo_ref_app","promo_gr_br"})
+     * @Groups({"promo:read","grpe_principale:read","rfg:read","ref_promo_gc:read","gp_read","promo_ref_app","promo_gr_br","br_app_ass"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255) 
      * 
-     * @Groups({"grp:read"})
+     * @Groups({"grp:read","br_app_ass"})
      */
     private $langue;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"br_app_ass"})
      */
     private $titre;
 
@@ -143,7 +144,7 @@ class Promos
 
     /**
      * @ORM\Column(type="string", length=255)
-     *  @Groups({"grp:read","promo:read","grpe_principale:read","rfg:read","ref_promo_gc:read","gp_read","promo_ref_app","promo_gr_br"})
+     *  @Groups({"grp:read","promo:read","grpe_principale:read","rfg:read","ref_promo_gc:read","gp_read","promo_ref_app","promo_gr_br","br_app_ass"})
      */
     private $fabrique;
 
@@ -177,7 +178,7 @@ class Promos
     /**
      * @ORM\ManyToOne(targetEntity=Referentiels::class, inversedBy="promos")
      * 
-     * @Groups({"promo:read","grpe_principale:read","rfg:read","ref_promo_gc:read","gp_read"})
+     * @Groups({"promo:read","grpe_principale:read","rfg:read","ref_promo_gc:read","gp_read","br_app_ass"})
      */
     private $referentiels;
 

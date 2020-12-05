@@ -58,7 +58,7 @@ class Competence
     /**
      * @ORM\Column(type="string", length=255)
      * 
-     * @Groups({"c_read","grp_read","niveaux_read","grpe_and_competences":"read","ref:read","ref_promo_gc:read","promo_ref_app"})
+     * @Groups({"c_read","grp_read","niveaux_read","grpe_and_competences":"read","ref:read","ref_promo_gc:read","promo_ref_app","promo_one_br"})
      * 
      * @Assert\NotBlank(message="le libelle est obligatoire")
      */

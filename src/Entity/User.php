@@ -69,7 +69,7 @@ class User implements UserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * 
-     * @Groups({"u_read","promo:read","rfg:read","gp_read"})
+     * @Groups({"u_read","promo:read","rfg:read","gp_read","promo_one_br","promo_gr_br","br_app_ass","student"})
      */
     private $id;
 
@@ -78,7 +78,7 @@ class User implements UserInterface
      * @Assert\NotBlank(message="l'adresse email est obligatoire")
      * @Assert\Email(message="l'adresse email pas valide")
      * 
-     * @Groups({"p_users_read","u_read","grp:read","apprenants:read","promo:read","grpe_principale:read","rfg:read","gp_read","promo_ref_app","promo_gr_br"})
+     * @Groups({"p_users_read","u_read","grp:read","apprenants:read","promo:read","grpe_principale:read","rfg:read","gp_read","promo_ref_app","promo_gr_br","br_app_ass","student"})
      */
     private $email;
 
@@ -97,7 +97,7 @@ class User implements UserInterface
      * 
      * @Assert\NotBlank(message="le firstname est obligatoire")
      * 
-     * @Groups({"p_users_read","u_read","grp:read","apprenants:read","promo:read","grpe_principale:read","rfg:read","gp_read","promo_ref_app","promo_gr_br"})
+     * @Groups({"p_users_read","u_read","grp:read","apprenants:read","promo:read","grpe_principale:read","rfg:read","gp_read","promo_ref_app","promo_gr_br","promo_one_br","br_app_ass","student"})
      */
     protected $firstname;
 
@@ -106,7 +106,7 @@ class User implements UserInterface
      * 
      * @Assert\NotBlank(message="le lastname est obligatoire")
      * 
-     * @Groups({"p_users_read","u_read","grp:read","apprenants:read","promo:read","grpe_principale:read","rfg:read","gp_read","promo_ref_app","promo_gr_br"})
+     * @Groups({"p_users_read","u_read","grp:read","apprenants:read","promo:read","grpe_principale:read","rfg:read","gp_read","promo_ref_app","promo_gr_br","promo_one_br","br_app_ass","student"})
      */
     protected $lastname;
 

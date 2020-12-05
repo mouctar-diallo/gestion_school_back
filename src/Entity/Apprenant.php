@@ -89,6 +89,11 @@ class Apprenant extends User
      */
     private $livrableAttenduesApprenants;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=ProfilSortie::class, inversedBy="apprenants")
+     */
+    private $profilSortie;
+
     public function __construct()
     {
         $this->groupes = new ArrayCollection();
@@ -284,6 +289,18 @@ class Apprenant extends User
                 $livrableAttenduesApprenant->setApprenant(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getProfilSortie(): ?ProfilSortie
+    {
+        return $this->profilSortie;
+    }
+
+    public function setProfilSortie(?ProfilSortie $profilSortie): self
+    {
+        $this->profilSortie = $profilSortie;
 
         return $this;
     }

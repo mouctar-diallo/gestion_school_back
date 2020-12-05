@@ -17,13 +17,13 @@ class Ressource
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"brief:read","promo_gr_br"})
+     * @Groups({"brief:read","promo_gr_br","promo_one_br","br_app_ass"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"brief:read","promo_gr_br"})
+     * @Groups({"brief:read","promo_gr_br","promo_one_br","br_app_ass"})
      */
     private $libelle;
 

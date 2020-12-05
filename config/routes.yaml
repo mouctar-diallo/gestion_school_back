@@ -227,6 +227,13 @@ get_one_brief_dans_une_promo:
    controller: App\Controller\BriefController::getOneBriefPromo
    methods: ['GET']
 
+#recupere un brief d'une promo  
+get_one_brief_by_apprenant:
+   path:  /api/apprenants/promos/{idp}/briefs/{id}
+   controller: App\Controller\BriefController::getOneBriefPromo
+   methods: ['GET']
+
+
 #get_briefs_apprenants_dans_une_promo
 get_briefs_apprenants_dans_une_promo:
    path:  /api/apprenants/promo/{id}/briefs
