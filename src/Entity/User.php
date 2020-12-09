@@ -23,7 +23,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ApiResource(
  *      attributes={
  *          "pagination_enabled"=true,
- *          "pagination_items_per_page"=5
+ *          "pagination_items_per_page"=10
  *      },
  *      collectionOperations={
  *          "get_users"={
