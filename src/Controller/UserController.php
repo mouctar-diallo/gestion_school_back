@@ -34,11 +34,21 @@ class UserController extends AbstractController
     public function add(UserHelper $helperUser, SerializerInterface $serializer, Request $request): Response
     {
         $userPostman = $request->request->all();
+        // if (!$userPostman) {
+        //     $userPostman = json_decode($request->getContent(),true);
+        // } 
+        // if (isset($userPostman['user'])) {
+        //     $userPostman = $userPostman['user'];
+        // }
         $profil = $this->profilrepo->getProfil($userPostman['profil']);
         $profil = "/api/admin/profils/".$profil[0]->getId();
         $userPostman['profil'] = $profil;
         $profilUser = $serializer->denormalize($userPostman['profil'] , Profil::class);
-        $user = $serializer->denormalize($userPostman,"App\Entity\\".ucfirst(strtolower($profilUser->getLibelle())));
+        if ($profilUser->getLibelle()!=="ADMIN") {
+            $user = $serializer->denormalize($userPostman,"App\Entity\\".ucfirst(strtolower($profilUser->getLibelle())));
+        }else{
+            $user = $user = $serializer->denormalize($userPostman,'App\Entity\User');
+        }
         $helperUser->createUser($request,$user,$userPostman,$profilUser);
         
         return $this->json('create',Response::HTTP_OK);
@@ -49,19 +59,30 @@ class UserController extends AbstractController
     public function editUser($id,Request $request)
     {
         $data = $request->request->all();
+        if (!$data) {
+            $data = json_decode($request->getContent(),true);
+        } 
+        if (isset($data['user'])) {
+            $data = $data['user'];
+        }
         $user = $this->repo->find($id);
         
         foreach($data as $d=>$value) {
-            if ($d !== "profil") {
+            if ($d !== "profil" && $d!=="image" && $d!=="confirm") {
                 $setProperty = 'set'.ucfirst($d);
                 $user->$setProperty($value);
             }
-            $profil = $this->profilrepo->getProfil($data['profil']);
-            $user->setProfil($profil[0]);
+            
+            if(isset($data['profil'])){
+                $profil = $this->profilrepo->getProfil($data['profil']);
+                $user->setProfil($profil[0]);
+            }
         }
-
         $image = $this->helper->traitementImage($request);
-        $user->setAvatar($image);
+        if ($image==false) {
+           $user->setAvatar($data['image']);
+        }else{ $user->setAvatar($image);}
+        
         $this->em->flush();
 
         return $this->json("edited successfully",Response::HTTP_OK);

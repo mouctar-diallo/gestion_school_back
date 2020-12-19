@@ -39,15 +39,18 @@ class UserHelper
         $user->setProfil($profil);
         $user->setPassword($this->encode->encodePassword($user,$postman['password']));
         //traitement image user
-        $image = $this->traitementImage($request);
-        $user->setAvatar($image);
+        if ($this->traitementImage($request)==false) {
+            $user->setAvatar($postman['image']);
+        }else{ 
+            $image = $this->traitementImage($request);
+            $user->setAvatar($image);
+        }
+        
         //data supplementaire de l'apprenants
         if($profil->getLibelle() == "APPRENANT"){
             $user->setAdresse($postman['adresse']);
             $user->setTelephone($postman['telephone']);
             $this->sendMail($postman['email']);
-            
-            dd($this->sendMail($postman['email']));
         }
 
         $this->manager->persist($user);
@@ -58,10 +61,12 @@ class UserHelper
     //traitementImage
     public function traitementImage(Request $request)
     {
-        $image = $request->files->get("image");
-        $image = fopen($image->getRealPath(),"r+");
-
-        return $image;
+        if ($request->files->get("image")) {
+            $image = $request->files->get("image");
+            $image = fopen($image->getRealPath(),"r+");
+            return $image;
+        }
+        return false;
     }
 
      //fonction qui gere l'envoie de mail

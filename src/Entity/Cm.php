@@ -11,7 +11,6 @@ use ApiPlatform\Core\Annotation\ApiResource;
  * @ORM\Entity(repositoryClass=CMRepository::class)
  * 
  *  @ApiResource()
-
  */
 class Cm extends User
 {

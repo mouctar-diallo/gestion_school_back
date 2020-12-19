@@ -24,7 +24,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *          "security"= "is_granted('ROLE_ADMIN')",
  *          "security_message"= "vous n'avez pas acces a cette ressource",
  *          "pagination_enabled"= true,
- *          "pagination_items_per_page"= 2
+ *          "pagination_items_per_page"= 7
  *      },
  * 
  *      normalizationContext= {"groups"={"p_read"}},
@@ -58,7 +58,7 @@ class Profil
      * @ORM\Column(type="string", length=255)
      * 
      * @Assert\NotBlank(message="le libelle est obligatoire")
-     * @Groups({"p_read","p_users_read","p_write"})
+     * @Groups({"p_read","p_users_read","p_write","u_read"})
      */
     private $libelle;
 

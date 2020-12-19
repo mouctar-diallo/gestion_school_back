@@ -23,7 +23,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ApiResource(
  *      attributes={
  *          "pagination_enabled"=true,
- *          "pagination_items_per_page"=10
+ *          "pagination_items_per_page"=7
  *      },
  *      collectionOperations={
  *          "get_users"={
@@ -115,7 +115,7 @@ class User implements UserInterface
      * 
      * @Assert\NotBlank(message="veuillez choisir un profil")
      * 
-     *  @Groups({"grp:read"})
+     *  @Groups({"grp:read","u_read"})
      */
     protected $profil;
 
@@ -127,6 +127,8 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="blob", nullable=true)
+     * 
+     * @Groups({"u_read","p_users_read"})
      * 
      */
     private $avatar;
