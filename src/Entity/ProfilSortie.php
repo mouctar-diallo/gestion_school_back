@@ -55,6 +55,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR') or is_granted('ROLE_CM'))",
  *      },
  * 
+ *      "delete"={
+ *          "path" = "/admin/profilsorties/{id}",   
+ *          "method"= "PUT",
+ *      }
+ * 
  * }
  * )
  * @ORM\Entity(repositoryClass=ProfilSortieRepository::class)

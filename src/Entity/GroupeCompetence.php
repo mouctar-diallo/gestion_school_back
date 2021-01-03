@@ -28,6 +28,11 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *          "path"="/admin/grpecompetences/competences",
  *          "normalization_context"={"groups"={"grp_read"}}
  *      },
+ *  *      "get_groupeCompetences_kesse"={
+ *          "method"="GET",
+ *          "path"="/admin/grpecompetence",
+ *          "normalization_context"={"groups"={"grp"}}
+ *      },
  * 
  *     "add_grp_competence"={
 *           "method"="POST",
@@ -65,14 +70,14 @@ class GroupeCompetence
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * 
-     * @Groups({"grp_read","g_read","referentiels":"read","grpe_and_competences":"read","ref_promo_gc:read"})
+     * @Groups({"grp_read","g_read","referentiels":"read","grpe_and_competences":"read","ref_promo_gc:read","grp"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * 
-     * @Groups({"grp_read","g_read","referentiels":"read","grpe_and_competences":"read","ref:read","ref_promo_gc:read"})
+     * @Groups({"grp_read","g_read","referentiels":"read","grpe_and_competences":"read","ref:read","ref_promo_gc:read","grp"})
      * 
      * @Assert\NotBlank(message = "le libelle est obligatoire")
      */
@@ -81,7 +86,7 @@ class GroupeCompetence
     /**
      * @ORM\Column(type="string", length=255)
      * 
-     * @Groups({"grp_read"})
+     * @Groups({"grp_read","grp"})
      * 
      * 
      * @Assert\NotBlank(message = "la description est obligatoire")

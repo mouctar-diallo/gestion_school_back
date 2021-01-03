@@ -24,7 +24,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *          "security"= "is_granted('ROLE_ADMIN')",
  *          "security_message"= "vous n'avez pas acces a cette ressource",
  *          "pagination_enabled"= true,
- *          "pagination_items_per_page"= 7
+ *          "pagination_items_per_page"= 4
  *      },
  * 
  *      normalizationContext= {"groups"={"p_read"}},

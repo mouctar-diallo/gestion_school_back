@@ -34,12 +34,6 @@ class UserController extends AbstractController
     public function add(UserHelper $helperUser, SerializerInterface $serializer, Request $request): Response
     {
         $userPostman = $request->request->all();
-        // if (!$userPostman) {
-        //     $userPostman = json_decode($request->getContent(),true);
-        // } 
-        // if (isset($userPostman['user'])) {
-        //     $userPostman = $userPostman['user'];
-        // }
         $profil = $this->profilrepo->getProfil($userPostman['profil']);
         $profil = "/api/admin/profils/".$profil[0]->getId();
         $userPostman['profil'] = $profil;
@@ -59,24 +53,18 @@ class UserController extends AbstractController
     public function editUser($id,Request $request)
     {
         $data = $request->request->all();
-        if (!$data) {
-            $data = json_decode($request->getContent(),true);
-        } 
-        if (isset($data['user'])) {
-            $data = $data['user'];
-        }
-        $user = $this->repo->find($id);
-        
+        $user = $this->repo->find($id);  
         foreach($data as $d=>$value) {
             if ($d !== "profil" && $d!=="image" && $d!=="confirm") {
                 $setProperty = 'set'.ucfirst($d);
-                $user->$setProperty($value);
+                if ($value !== "") {
+                    $user->$setProperty($value);
+                }
             }
-            
-            if(isset($data['profil'])){
-                $profil = $this->profilrepo->getProfil($data['profil']);
-                $user->setProfil($profil[0]);
-            }
+        }
+        if(isset($data['profil'])){
+            $profil = $this->profilrepo->getProfil($data['profil']);
+            $user->setProfil($profil[0]);
         }
         $image = $this->helper->traitementImage($request);
         if ($image==false) {

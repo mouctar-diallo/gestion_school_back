@@ -7,6 +7,7 @@ use App\Entity\Competence;
 use App\Repository\NiveauRepository;
 use App\Repository\CompetenceRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\GroupeCompetenceRepository;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class CompetenceHelper 
@@ -14,19 +15,24 @@ class CompetenceHelper
     private $em;
     private $competenceRepository;
     private $niveauRepository;
-    private $serializer;
-    public function __construct(EntityManagerInterface $em,CompetenceRepository $competenceRepository,NiveauRepository $niveauRepository,SerializerInterface $serializer)
+    private $grpeRepo;
+    public function __construct(EntityManagerInterface $em,CompetenceRepository $competenceRepository,NiveauRepository $niveauRepository,SerializerInterface $serializer, GroupeCompetenceRepository $grpeRepo)
     {
         $this->em = $em;
         $this->competenceRepository = $competenceRepository;
         $this->niveauRepository = $niveauRepository;
         $this->serializer = $serializer;
+        $this->grpeRepo = $grpeRepo;
     }
 
     public function addCompetenceAndLevels($competences)
     {
         $competence = new Competence();
         $competence->setLibelle($competences['libelle']);
+        if (isset($competences['groupeCompetences'])) {
+            $groupeCompetence = $this->grpeRepo->find($competences['groupeCompetences']);
+            $competence->addGroupeCompetence($groupeCompetence);
+        }
         if (isset($competences['niveau'])) {
             for ($i=0; $i < count($competences['niveau']); $i++) { 
                 $niveau = new Niveau();
@@ -35,10 +41,11 @@ class CompetenceHelper
                 $niveau->setGroupeActions($competences['niveau'][$i]['groupe_actions']);
                
                 $this->em->persist($niveau);
-                $niveau->setCompetence($competence);
                 $this->em->persist($competence);
+                $niveau->setCompetence($competence);
             } 
        }
+       
         $this->em->flush();
     }
 
