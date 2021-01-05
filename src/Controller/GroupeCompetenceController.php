@@ -24,9 +24,13 @@ class GroupeCompetenceController extends AbstractController
     public function addCompetenceAndLevels(Request $request, CompetenceHelper $helperCompetence)
     {
         $competence = json_decode($request->getContent(), true);
-        $helperCompetence->addCompetenceAndLevels($competence);
-
-        return $this->json("created", Response::HTTP_CREATED);
+        $testValide = $helperCompetence->addCompetenceAndLevels($competence);
+        if ($testValide != null) {
+            return $this->json(404);
+        }else{
+            return $this->json("created", Response::HTTP_CREATED);
+        }
+        
     }
 
 
