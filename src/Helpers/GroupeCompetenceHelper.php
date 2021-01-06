@@ -7,6 +7,7 @@ use App\Repository\CompetenceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\GroupeCompetenceRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 class GroupeCompetenceHelper 
@@ -14,11 +15,13 @@ class GroupeCompetenceHelper
     private $repo;
     private $em;
     private $grouperepo;
-    public function __construct(EntityManagerInterface $em, CompetenceRepository $repo,GroupeCompetenceRepository $grouperepo)
+    private $validator;
+    public function __construct(EntityManagerInterface $em, CompetenceRepository $repo,GroupeCompetenceRepository $grouperepo, ValidatorInterface $validator)
     {
         $this->em = $em;
         $this->repo = $repo;
         $this->grouperepo = $grouperepo;
+        $this->validator = $validator;
     }
 
     public function addGroupeCompetence($groupejson)
@@ -44,8 +47,14 @@ class GroupeCompetenceHelper
                     }
 
                 }
-                $this->em->persist($groupeCompetence);
-                $this->em->flush();
+                //validation
+                $erreur = $this->validator->validate($groupeCompetence);
+                if (count($erreur) > 0) {  
+                    return $erreur;
+                  }else{
+                    $this->em->persist($groupeCompetence);
+                    $this->em->flush(); 
+                }
             }
         }
     }
@@ -54,21 +63,24 @@ class GroupeCompetenceHelper
     //put groupe competence into
     public function putGroupeCompetence($postaman,$id,$request)
     {
-        $groupecompetence= $this->grouperepo->find($id);
-        
-        if($postaman->option == "add")
+        $groupecompetence = $this->grouperepo->find($id);
+        if ($groupecompetence) {
+            $groupecompetence->setLibelle($postaman['libelle']);
+            $groupecompetence->setDescription($postaman['description']);
+        }
+        if(isset($postaman['option']) && $postaman['option'] == "add")
         {
-            if ($postaman->competence)
+            if ($postaman['competence'])
             {
-                for ($i=0;$i<count($postaman->competence); $i++)
+                for ($i=0;$i<count($postaman['competence']); $i++)
                 {
-                    if (isset($postaman->competence[$i]->id)){
-                        $comp = $this->repo->find($postaman->competence[$i]->id);
+                    if (isset($postaman['competence'][$i]['id'])){
+                        $comp = $this->repo->find($postaman['competence'][$i]['id']);
                         $groupecompetence->addCompetence($comp);
                     }else{
                         $c = new Competence();
-                        if (isset($postaman->competence[$i]->libelle)) {
-                            $c->setLibelle($postaman->competence[$i]->libelle);
+                        if (isset($postaman['competence'][$i]['libelle'])) {
+                            $c->setLibelle($postaman['competence'][$i]['libelle']);
                             $groupecompetence->addCompetence($c);
                             $this->em->persist($c);
                         }
@@ -78,15 +90,15 @@ class GroupeCompetenceHelper
                 return "success";
             }
         }else{
-            for ($i=0;$i<count($postaman->competence); $i++)
+            for ($i=0;$i<count($postaman['competence']); $i++)
             {
-                if (isset($postaman->competence[$i]->id)){
-                    $comp = $this->repo->find($postaman->competence[$i]->id);
+                if (isset($postaman['competence'][$i]['id'])){
+                    $comp = $this->repo->find($postaman['competence'][$i]['id']);
                     $groupecompetence->removeCompetence($comp);
                     $this->em->flush();
-                    return "edit success";
                 }
             }
+            return "edit success";
         }
        
     }

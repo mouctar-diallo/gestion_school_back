@@ -15,8 +15,12 @@ class GroupeCompetenceController extends AbstractController
     public function create(Request $request, GroupeCompetenceHelper $helper): Response
     {
         $groupeCompetence = json_decode($request->getContent(), true);
-        $helper->addGroupeCompetence($groupeCompetence);
-        return $this->json('groupe added successfully');
+        $testValide = $helper->addGroupeCompetence($groupeCompetence);
+        if ($testValide != null) {
+            return $this->json(404);
+        }else{
+            return $this->json("groupe added successfully", Response::HTTP_CREATED);
+        }
     }
 
 
@@ -46,7 +50,7 @@ class GroupeCompetenceController extends AbstractController
     //put groupe competence d'un groupe
     public function addOrRemoveCompetence($id,GroupeCompetenceHelper $helper,Request $request)
     {
-        $postaman = json_decode($request->getContent());
+        $postaman = json_decode($request->getContent(), true);
         $helper->putGroupeCompetence($postaman,$id,$request);
 
         return $this->json("success");

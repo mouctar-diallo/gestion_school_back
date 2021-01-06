@@ -14,8 +14,11 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=GroupeCompetenceRepository::class)
- * 
+
  * @ApiResource(
+*      attributes={
+*          "pagination_enabled"= false,
+*      },
  *   collectionOperations={
  *      "get_competences"={
  *          "method"="GET",
