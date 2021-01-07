@@ -31,6 +31,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * 
  *      "create_referentiels"={
  *          "method"= "POST",
+ *  *        "route_name"="add_referentiel",
  *          "path" = "/admin/referentiels",
  *           "security" = "is_granted('ROLE_ADMIN')",
  *      }
@@ -46,7 +47,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * 
  *      "edit_grpecompetences_referentiels"={
  *          "method"= "PUT",
- *          "route_nam"="edit_referentiel",
+ *          "route_name"="edit_referentiel",
  *           "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR') or is_granted('ROLE_CM') or is_granted('ROLE_APPRENANT'))",
  *      },
  * 
@@ -85,11 +86,6 @@ class Referentiels
     private $presentation;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $programme;
-
-    /**
      * @ORM\ManyToMany(targetEntity=GroupeCompetence::class, inversedBy="referentiels",cascade={"persist"})
      * @Groups({"referentiels":"read","grpe_and_competences":"read","ref:read","ref_promo_gc:read"})
      */
@@ -109,6 +105,21 @@ class Referentiels
      * @ORM\OneToMany(targetEntity=CompetencesValides::class, mappedBy="referentiels")
      */
     private $competencesValides;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $critereEvaluation;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $critereAdmission;
+
+    /**
+     * @ORM\Column(type="blob")
+     */
+    private $programme;
 
     public function __construct()
     {
@@ -143,18 +154,6 @@ class Referentiels
     public function setPresentation(string $presentation): self
     {
         $this->presentation = $presentation;
-
-        return $this;
-    }
-
-    public function getProgramme(): ?string
-    {
-        return $this->programme;
-    }
-
-    public function setProgramme(string $programme): self
-    {
-        $this->programme = $programme;
 
         return $this;
     }
@@ -251,6 +250,42 @@ class Referentiels
                 $competencesValide->setReferentiels(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCritereEvaluation(): ?string
+    {
+        return $this->critereEvaluation;
+    }
+
+    public function setCritereEvaluation(string $critereEvaluation): self
+    {
+        $this->critereEvaluation = $critereEvaluation;
+
+        return $this;
+    }
+
+    public function getCritereAdmission(): ?string
+    {
+        return $this->critereAdmission;
+    }
+
+    public function setCritereAdmission(string $critereAdmission): self
+    {
+        $this->critereAdmission = $critereAdmission;
+
+        return $this;
+    }
+
+    public function getProgramme()
+    {
+        return $this->programme;
+    }
+
+    public function setProgramme($programme): self
+    {
+        $this->programme = $programme;
 
         return $this;
     }

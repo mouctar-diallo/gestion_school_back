@@ -140,6 +140,11 @@ get_apprenant_competences:
    controller: App\Controller\LivrablePartielController::getCompetencesApprenant
    methods: ['GET']
 
+add_referentiel:
+   path:  /api/admin/referentiels
+   controller: App\Controller\ReferentielController::addReferentiel
+   methods: ['POST']
+
 #Recuperer les statistiques des apprenants
 get_apprenant_statistiques:
    path:  /api/apprenant/{ida}/promo/{idp}/referentiel/{idr}/statistiques/briefs
