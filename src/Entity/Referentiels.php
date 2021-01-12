@@ -31,7 +31,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * 
  *      "create_referentiels"={
  *          "method"= "POST",
- *  *        "route_name"="add_referentiel",
+ *  *       "route_name"="add_referentiel",
  *          "path" = "/admin/referentiels",
  *           "security" = "is_granted('ROLE_ADMIN')",
  *      }
@@ -45,10 +45,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *           "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR') or is_granted('ROLE_CM') or is_granted('ROLE_APPRENANT'))",
  *      },
  * 
- *      "edit_grpecompetences_referentiels"={
+ *      "edit_referentiel"={
  *          "method"= "PUT",
  *          "route_name"="edit_referentiel",
- *           "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR') or is_granted('ROLE_CM') or is_granted('ROLE_APPRENANT'))",
+ *          "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR') or is_granted('ROLE_CM') or is_granted('ROLE_APPRENANT'))",
  *      },
  * 
 *      "competences_groupe_competences_ref"={
@@ -80,10 +80,7 @@ class Referentiels
      */
     private $libelle;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $presentation;
+    
 
     /**
      * @ORM\ManyToMany(targetEntity=GroupeCompetence::class, inversedBy="referentiels",cascade={"persist"})
@@ -108,18 +105,29 @@ class Referentiels
 
     /**
      * @ORM\Column(type="string", length=255)
+     * 
+     * @Groups({"referentiels":"read"})
      */
     private $critereEvaluation;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * 
+     * @Groups({"referentiels":"read"})
      */
     private $critereAdmission;
 
     /**
      * @ORM\Column(type="blob")
+     *
      */
     private $programme;
+
+    /**
+     * @ORM\Column(type="text")
+     * @Groups({"referentiels":"read"})
+     */
+    private $presentation;
 
     public function __construct()
     {
@@ -142,18 +150,6 @@ class Referentiels
     public function setLibelle(string $libelle): self
     {
         $this->libelle = $libelle;
-
-        return $this;
-    }
-
-    public function getPresentation(): ?string
-    {
-        return $this->presentation;
-    }
-
-    public function setPresentation(string $presentation): self
-    {
-        $this->presentation = $presentation;
 
         return $this;
     }
@@ -286,6 +282,18 @@ class Referentiels
     public function setProgramme($programme): self
     {
         $this->programme = $programme;
+
+        return $this;
+    }
+
+    public function getPresentation(): ?string
+    {
+        return $this->presentation;
+    }
+
+    public function setPresentation(string $presentation): self
+    {
+        $this->presentation = $presentation;
 
         return $this;
     }

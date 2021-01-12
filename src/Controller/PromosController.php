@@ -6,6 +6,7 @@ use App\Entity\Promos;
 use App\Entity\Groupes;
 use App\Entity\Apprenant;
 use App\Helpers\UserHelper;
+use App\Helpers\PromoHelper;
 use App\Repository\ProfilRepository;
 use App\Repository\PromosRepository;
 use App\Repository\GroupesRepository;
@@ -15,9 +16,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\ReferentielsRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Constraints\DateTime;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -32,8 +33,9 @@ class PromosController extends AbstractController
     private $profil;
     private $userHelper;
     private $encode;
+    private $validator;
 
-    public function __construct(SerializerInterface $serialize,EntityManagerInterface $em,ReferentielsRepository $ref,FormateurRepository $formateur,ApprenantRepository $apprenant,PromosRepository $promos,ProfilRepository $profil,UserHelper $userHelper, UserPasswordEncoderInterface $encode)
+    public function __construct(SerializerInterface $serialize,EntityManagerInterface $em,ReferentielsRepository $ref,FormateurRepository $formateur,ApprenantRepository $apprenant,PromosRepository $promos,ProfilRepository $profil,UserHelper $userHelper, UserPasswordEncoderInterface $encode, ValidatorInterface $validator)
     {
         $this->serialize = $serialize;
         $this->em = $em;
@@ -44,58 +46,52 @@ class PromosController extends AbstractController
         $this->profil = $profil;
         $this->userHelper = $userHelper;
         $this->encode = $encode;
+        $this->validator = $validator;
     }
     
-    public function addPromos(Request $request)
+    public function addPromos(Request $request, PromoHelper $helper)
     {
 
-        $infosjson = json_decode($request->getContent(),true);
-       $promos = new Promos;
-          $promos->setLangue($infosjson['langue'])->setTitre($infosjson['titre'])
-                  ->setDescription($infosjson['description'])->setLieu($infosjson['lieu'])
-                  ->setFabrique($infosjson['fabrique'])->setEtat($infosjson['etat'])
-                  ->setDateDebut(new \DateTime())->setDateFinProvisoire(new \DateTime())
-                  ->setDateFinReel(new \DateTime());
-            //affectons un referentiel au promos
-           $referentiel = $this->ref->find($infosjson['referentiels']['id']);
-           $promos->setReferentiels($referentiel);
-
-        if ($infosjson['groupes']) {
-            $groupes = new Groupes;
-            $groupes->setNom($infosjson['groupes'][0]['nom'])
-                ->setDateCreation(new \DateTime())
-                ->setStatut($infosjson['groupes'][0]['statut'])
-                ->setType($infosjson['groupes'][0]['type']);
-            
-            $promos->addGroupe($groupes);
+        $infosjson = $request->request->all();
+        //recuperons le fichier excel des apprenants
+        $FileExcel = $request->files->get("ExcelFile");
+        unset($infosjson['referentiels']);
+        $promos = $this->serialize->denormalize($infosjson, Promos::class);
+        $promos->setEtat("encours");
+        $referentiel = $this->ref->find($request->request->get('referentiels'));
+        if ($referentiel) {
+            $promos->setReferentiels($referentiel);
         }
-        //testons si user veut creer apprenant      
-        if (isset($infosjson['apprenants'])) {
-            foreach ($infosjson['apprenants'] as $student) {
-                $apprenant = new Apprenant();
-                $apprenant->setEmail($student['email']);
+       
+        //testons si le fichier excel existe     
+        if (isset($FileExcel)) {
+            $students = $helper->ApprenantFromFileExcel($FileExcel);
+            $profil = $this->profil->getProfil("Apprenant");
+            foreach ($students as  $student){
+                $apprenant = $this->serialize->denormalize($student, Apprenant::class);
+                $apprenant->setProfil($profil[0]);
+                //encode password
                 $apprenant->setPassword($this->encode->encodePassword($apprenant,$apprenant->getPassword()));
-                $groupes->addApprenant($apprenant);
-                $this->em->persist($apprenant);
+                //send mail
                 $this->userHelper->sendMail($apprenant->getEmail());
-            }
+                $this->em->persist($apprenant);
+                //ajout apprenant dans promo
+                $promos->addApprenant($apprenant);
+                $apprenant->setPromos($promos);
+            }  
         }
-        //affectons un formateur au groupe
-        if (isset($infosjson['formateurs'])){
-            for ($i= 0; $i < count($infosjson['formateurs']); $i++) {
-                $teacher = $this->formateur->find($infosjson['formateurs'][$i]['id']);
-                $groupes->addFormateur($teacher);
-                $promos->addFormateur($teacher);
-            }
+        $avatar = $this->userHelper->traitementImage($request);
+        $promos->setAvatar($avatar);
+        $erreur = $this->validator->validate($promos);
+        if (count($erreur) > 0){
+            return $this->json($erreur);
         }
-
-        $this->em->persist($groupes);
         $this->em->persist($promos);
         $this->em->flush();
-
-        return $this->json($promos,Response::HTTP_CREATED);
-
+        
+        return $this->json("added successfully",Response::HTTP_CREATED);
     }
+    
     
     public function getApprenantGroupePromo($idp,$id,GroupesRepository $repo)
     {

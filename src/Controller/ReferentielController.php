@@ -26,13 +26,14 @@ class ReferentielController extends AbstractController
        }
     }
 
-    public function editReferentiels($id, Request $request,ReferentielHelper $help)
+    public function editReferentiel($id,Request $request)
     {
-      $referentiel = json_decode($request->getContent(),true);
-      $test = $help->putReferentiels($id,$referentiel);
-      if($test){
-        return $this->json($test);
-      }
+      $referentiel = $request->request->all();
+      dd($referentiel);
+      // $test = $help->putReferentiels($id,$referentiel);
+      // if($test){
+      //   return $this->json($test);
+      // }
       return $this->json("edited", Response::HTTP_CREATED);
     }
 
@@ -40,7 +41,6 @@ class ReferentielController extends AbstractController
     public function addReferentiel(EntityManagerInterface $em, ValidatorInterface $validator,Request $request, GroupeCompetenceRepository $grpRepo)
     {
       $json = $request->request->all();
-
       $referentiel = (new Referentiels())
           ->setLibelle($json['libelle'])
           ->setPresentation($json['presentation'])

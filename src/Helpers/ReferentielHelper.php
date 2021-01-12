@@ -24,30 +24,30 @@ class ReferentielHelper
 
     public function putReferentiels($id,$postman)
     {
-        $referentiel = $this->ref->find($id);
+        $ref = $this->ref->find($id);
         if ($postman['option']=="delete") {
-            for ($i=0; $i < count($postman['groupeCompetence']); $i++) { 
-                if(isset($postman['groupeCompetence'][$i]['id']))
+            for ($i=0; $i < count($postman['groupeCompetences']); $i++) { 
+                if(isset($postman['groupeCompetences'][$i]['id']))
                 {
-                    $id = $postman['groupeCompetence'][$i]['id'];
+                    $id = $postman['groupeCompetences'][$i]['id'];
                     $groupeCompetence = $this->repo->find($id);
-                    $referentiel->removeGroupeCompetence($groupeCompetence);
+                    $ref->removeGroupeCompetence($groupeCompetence);
                     $this->em->flush();
                 }    
             }
-        }else if($postman['option']== "add")
+        }else if($postman['option'] == "add")
         {
-            for ($i=0; $i < count($postman['groupeCompetence']); $i++) { 
-                if(isset($postman['groupeCompetence'][$i]['id']))
+            for ($i=0; $i < count($postman['groupeCompetences']); $i++) { 
+                if(isset($postman['groupeCompetences'][$i]['id']))
                 {
-                    $id = $postman['groupeCompetence'][$i]['id'];
+                    $id = $postman['groupeCompetences'][$i]['id'];
                     $groupeCompetence = $this->repo->find($id);
-                    $referentiel->addGroupeCompetence($groupeCompetence);
+                    $ref->addGroupeCompetence($groupeCompetence);
                     $this->em->flush();
                 }else{
                     $group = new GroupeCompetence();
-                    $group->setLibelle($postman['groupeCompetence'][$i]['libelle']);
-                    $group->setDescription($postman['groupeCompetence'][$i]['description']);
+                    $group->setLibelle($postman['groupeCompetences'][$i]['libelle']);
+                    $group->setDescription($postman['groupeCompetences'][$i]['description']);
                     $group->setIsdeleted(0);
                     $erreur = $this->validator->validate($group);
                     
@@ -55,7 +55,7 @@ class ReferentielHelper
                         return $erreur;
                     }
                     $this->em->persist($group);
-                    $referentiel->addGroupeCompetence($group);
+                    $ref->addGroupeCompetence($group);
                     $this->em->flush();
                 }
             }

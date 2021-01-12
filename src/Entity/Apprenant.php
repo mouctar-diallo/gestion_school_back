@@ -101,9 +101,9 @@ class Apprenant extends User
         $this->firstname = "firstname";
         $this->lastname = "lastname";
         $this->archive = 0;
-        $this->telephone = "telephone";
-        $this->adresse = "adresse";
-        $this->password = "password";
+        $this->telephone = "777777777";
+        $this->adresse = "your adresse";
+        $this->password = "passer";
         $this->apprenantLivrablePartiels = new ArrayCollection();
         $this->competencesvalides = new ArrayCollection();
         $this->briefApprenant = new ArrayCollection();
