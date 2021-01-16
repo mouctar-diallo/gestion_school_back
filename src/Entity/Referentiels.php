@@ -50,6 +50,12 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *          "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR') or is_granted('ROLE_CM')",
  *      },
  * 
+ *      "archiver_referentiel"={
+ *          "method"= "PUT",
+ *          "route_name"="archiver_referentiel",
+ *          "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR') or is_granted('ROLE_CM')",
+ *      },
+ * 
 *      "competences_groupe_competences_ref"={
 *              "method"= "GET",
 *              "route_name"= "get_comp_gc_ref",

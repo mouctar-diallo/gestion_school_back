@@ -38,8 +38,14 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *      "edit_niveaux"={
  *          "method"="PUT",
  *          "path"="/admin/competences/{id}",
- *              "route_name"="edit_niveaux"
+ *          "route_name"="edit_niveaux"
  *      },
+ * 
+ *          "archive_competence"={
+ *              "method"="DELETE",
+ *              "path"= "/admin/competences/{id}",
+ *              "route_name"="archive_competence"
+ *          },
  *  }    
  * )
  * @UniqueEntity("libelle",message= "la competence existe dans bdd")

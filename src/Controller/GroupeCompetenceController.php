@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Helpers\CompetenceHelper;
 use App\Helpers\GroupeCompetenceHelper;
+use App\Repository\CompetenceRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -54,5 +56,20 @@ class GroupeCompetenceController extends AbstractController
         $helper->putGroupeCompetence($postaman,$id,$request);
 
         return $this->json("success");
+    }
+
+    //archiver
+    public function archiverCompetence($id, CompetenceRepository $repo,EntityManagerInterface $em)
+    {
+        $competence = $repo->find($id);
+        if ($competence) {
+            $competence->setArchive(1);
+            foreach ($competence->getGroupeCompetences() as $gp){
+                $gp->removeCompetence($competence);
+            }
+            $em->flush();
+            return $this->json(Response::HTTP_OK);
+        }
+        return $this->json(Response::HTTP_BAD_REQUEST);
     }
 }

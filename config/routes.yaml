@@ -63,6 +63,11 @@ edit_referentiel:
    controller: App\Controller\ReferentielController::edit
    methods: ['POST']
 
+   #archive referenciel
+archiver_referentiel:
+   path:  /api/admin/referentiels/{id}
+   controller: App\Controller\ReferentielController::ArchiverReferentiel
+   methods: ['PUT']
 #delete apprenant in groupe
 retire_apprenant:
    path:  /api/admin/groupes/{id}/apprenants/{idA}
@@ -115,6 +120,11 @@ init_apprenat_competence:
    path:  /api/promo/{id}/apprenants/initialisation
    controller: App\Controller\LivrablePartielController::initialisation
    methods: ['POST']
+
+archive_competence:
+   path:  /api/admin/competences/{id}
+   controller: App\Controller\GroupeCompetenceController::archiverCompetence
+   methods: ['DELETE']   
 
 #ajouter des fils de discustion et des commentaires formateur
 add_fil_discution:

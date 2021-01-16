@@ -61,6 +61,11 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *              "normalization_context"={"groups"={"grp_read"}},
  *              "route_name"="edit_groupe"
  *          },
+ * 
+ *          "archive_groupe"={
+ *              "method"="PUT",
+ *              "path"= "/admin/grpecompetences/{id}"
+ *          },
  *      }
  * )
  * 

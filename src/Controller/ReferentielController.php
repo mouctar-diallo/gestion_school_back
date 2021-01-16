@@ -66,4 +66,20 @@ class ReferentielController extends AbstractController
       $em->flush();
       return $this->json('added successfully',Response::HTTP_CREATED);
     }
+
+    public function ArchiverReferentiel(EntityManagerInterface $em,ReferentielsRepository $repo, $id)
+    {
+      $referentiel = $repo->find($id);
+      
+      if ($referentiel) {
+        $referentiel->setArchive(1);
+        //archive promos associées
+        foreach ($referentiel->getPromos() as $p){
+          $p->setArchive(1);
+        }
+        $em->flush();
+        return $this->json(Response::HTTP_OK);
+      }
+      return $this->json("referentiel innexistant");
+    }
 }
