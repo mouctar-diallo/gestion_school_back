@@ -13,7 +13,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ApiResource(
- * 
  * collectionOperations={
  *      "get_referentiels_grpecompetences"={
  *          "normalization_context"={"groups"={"referentiels":"read"}},
@@ -45,10 +44,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *           "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR') or is_granted('ROLE_CM') or is_granted('ROLE_APPRENANT'))",
  *      },
  * 
- *      "edit_referentiel"={
- *          "method"= "PUT",
+ *      "modify_referentiel"={
+ *          "method"= "POST",
  *          "route_name"="edit_referentiel",
- *          "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR') or is_granted('ROLE_CM') or is_granted('ROLE_APPRENANT'))",
+ *          "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR') or is_granted('ROLE_CM')",
  *      },
  * 
 *      "competences_groupe_competences_ref"={
@@ -56,9 +55,9 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 *              "route_name"= "get_comp_gc_ref",
 *              "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR') or is_granted('ROLE_CM') or is_granted('ROLE_APPRENANT'))",
 *          },
- * }
- * ) * @ORM\Entity(repositoryClass=ReferentielsRepository::class)
- * 
+ *  }
+ * )  
+ * @ORM\Entity(repositoryClass=ReferentielsRepository::class)
  * @UniqueEntity("libelle",message="libelle du referentiel doit etre unique")
  */
 class Referentiels

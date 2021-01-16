@@ -60,8 +60,8 @@ edit_grpe_tags:
 #edit groupe de competences d'un referentiel
 edit_referentiel:
    path:  /api/admin/referentiels/{id}
-   controller: App\Controller\ReferentielController::editReferentiel
-   methods: ['PUT']
+   controller: App\Controller\ReferentielController::edit
+   methods: ['POST']
 
 #delete apprenant in groupe
 retire_apprenant:

@@ -30,12 +30,12 @@ class PromosController extends AbstractController
     private $formateur;
     private $apprenant;
     private $promos;
-    private $profil;
+    private $profilRepo;
     private $userHelper;
     private $encode;
     private $validator;
 
-    public function __construct(SerializerInterface $serialize,EntityManagerInterface $em,ReferentielsRepository $ref,FormateurRepository $formateur,ApprenantRepository $apprenant,PromosRepository $promos,ProfilRepository $profil,UserHelper $userHelper, UserPasswordEncoderInterface $encode, ValidatorInterface $validator)
+    public function __construct(SerializerInterface $serialize,EntityManagerInterface $em,ReferentielsRepository $ref,FormateurRepository $formateur,ApprenantRepository $apprenant,PromosRepository $promos,ProfilRepository $profilRepo,UserHelper $userHelper, UserPasswordEncoderInterface $encode, ValidatorInterface $validator)
     {
         $this->serialize = $serialize;
         $this->em = $em;
@@ -43,7 +43,7 @@ class PromosController extends AbstractController
         $this->formateur = $formateur;
         $this->apprenant = $apprenant;
         $this->promos = $promos;
-        $this->profil = $profil;
+        $this->profilRepo = $profilRepo;
         $this->userHelper = $userHelper;
         $this->encode = $encode;
         $this->validator = $validator;
@@ -51,7 +51,6 @@ class PromosController extends AbstractController
     
     public function addPromos(Request $request, PromoHelper $helper)
     {
-
         $infosjson = $request->request->all();
         //recuperons le fichier excel des apprenants
         $FileExcel = $request->files->get("ExcelFile");
@@ -62,22 +61,23 @@ class PromosController extends AbstractController
         if ($referentiel) {
             $promos->setReferentiels($referentiel);
         }
-       
-        //testons si le fichier excel existe     
-        if (isset($FileExcel)) {
-            $students = $helper->ApprenantFromFileExcel($FileExcel);
-            $profil = $this->profil->getProfil("Apprenant");
+        //get All students in the Excel file in array
+        $students = $helper->ApprenantFromFileExcel($FileExcel);   
+        if ($students) { 
+            $profil = $this->profilRepo->findOneByLibelle("Apprenant");
             foreach ($students as  $student){
                 $apprenant = $this->serialize->denormalize($student, Apprenant::class);
-                $apprenant->setProfil($profil[0]);
-                //encode password
-                $apprenant->setPassword($this->encode->encodePassword($apprenant,$apprenant->getPassword()));
-                //send mail
-                $this->userHelper->sendMail($apprenant->getEmail());
-                $this->em->persist($apprenant);
-                //ajout apprenant dans promo
-                $promos->addApprenant($apprenant);
-                $apprenant->setPromos($promos);
+                //testons si l'email ne se trouve pas dans la BDD
+                $ExistEmail = $this->apprenant->findOneByEmail($apprenant->getEmail());
+                if (!$ExistEmail){
+                    $apprenant->setProfil($profil);
+                    $apprenant->setPassword($this->encode->encodePassword($apprenant,$apprenant->getPassword()));
+                    //send mail
+                    $this->userHelper->sendMail($apprenant->getEmail());
+                    $this->em->persist($apprenant);
+                    $promos->addApprenant($apprenant);
+                    $apprenant->setPromos($promos);
+                }
             }  
         }
         $avatar = $this->userHelper->traitementImage($request);

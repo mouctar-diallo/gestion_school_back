@@ -26,19 +26,18 @@ class ReferentielController extends AbstractController
        }
     }
 
-    public function editReferentiel($id,Request $request)
+    public function edit($id,Request $request, ReferentielHelper $help)
     {
-      $referentiel = $request->request->all();
-      dd($referentiel);
-      // $test = $help->putReferentiels($id,$referentiel);
-      // if($test){
-      //   return $this->json($test);
-      // }
+      $json = $request->request->all();
+      $test = $help->putReferentiels($id,$json,$request);
+      if($test){
+        return $this->json($test);
+      }
       return $this->json("edited", Response::HTTP_CREATED);
     }
 
     //ajout d'un referentiel
-    public function addReferentiel(EntityManagerInterface $em, ValidatorInterface $validator,Request $request, GroupeCompetenceRepository $grpRepo)
+    public function addReferentiel(EntityManagerInterface $em, ValidatorInterface $validator,Request $request, GroupeCompetenceRepository $grpRepo, ReferentielHelper $help)
     {
       $json = $request->request->all();
       $referentiel = (new Referentiels())
@@ -46,13 +45,12 @@ class ReferentielController extends AbstractController
           ->setPresentation($json['presentation'])
           ->setCritereEvaluation($json['critereEvaluation'])
           ->setCritereAdmission($json['critereAdmission']);
-
-          if ($request->files->get("programme")) {
-            $programme = $request->files->get("programme");
-            $programme = fopen($programme->getRealPath(),"r+");
+          //gerons le programme file
+          $programme = $help->traitementProgrammeFile($request);
+          if ($programme) {
             $referentiel->setProgramme($programme);
           }
-         
+           
       if (isset($json['groupeCompetences'])) {
         for ($i=0; $i < count($json['groupeCompetences']); $i++) { 
           $groupe = $grpRepo->find($json['groupeCompetences'][$i]);

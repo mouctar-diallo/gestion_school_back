@@ -22,14 +22,23 @@ class ReferentielHelper
         $this->validator = $validator;
     }
 
-    public function putReferentiels($id,$postman)
+    public function putReferentiels($id,$postman,$request)
     {
         $ref = $this->ref->find($id);
+        $ref->setLibelle($postman['libelle']);
+        $ref->setPresentation($postman['presentation']);
+        $ref->setCritereEvaluation($postman['critereEvaluation']);
+        $ref->setCritereAdmission($postman['critereAdmission']);
+        //add or remove groupe de competence
         if ($postman['option']=="delete") {
+            $programme = $this->traitementProgrammeFile($request);
+            if ($programme){
+                $ref->setProgramme($programme);
+            }
             for ($i=0; $i < count($postman['groupeCompetences']); $i++) { 
-                if(isset($postman['groupeCompetences'][$i]['id']))
+                if(isset($postman['groupeCompetences'][$i]))
                 {
-                    $id = $postman['groupeCompetences'][$i]['id'];
+                    $id = $postman['groupeCompetences'][$i];
                     $groupeCompetence = $this->repo->find($id);
                     $ref->removeGroupeCompetence($groupeCompetence);
                     $this->em->flush();
@@ -37,10 +46,14 @@ class ReferentielHelper
             }
         }else if($postman['option'] == "add")
         {
+            $programme = $this->traitementProgrammeFile($request);
+            if ($programme){
+                $ref->setProgramme($programme);
+            }
             for ($i=0; $i < count($postman['groupeCompetences']); $i++) { 
-                if(isset($postman['groupeCompetences'][$i]['id']))
+                if(isset($postman['groupeCompetences'][$i]))
                 {
-                    $id = $postman['groupeCompetences'][$i]['id'];
+                    $id = $postman['groupeCompetences'][$i];
                     $groupeCompetence = $this->repo->find($id);
                     $ref->addGroupeCompetence($groupeCompetence);
                     $this->em->flush();
@@ -60,5 +73,17 @@ class ReferentielHelper
                 }
             }
         }
+    }
+
+
+    public function traitementProgrammeFile($request)
+    {
+        if ($request->files->get("programme")) {
+            $programme = $request->files->get("programme");
+            $programme = fopen($programme->getRealPath(),"r+");
+            return $programme;
+        }
+
+        return null;
     }
 }
