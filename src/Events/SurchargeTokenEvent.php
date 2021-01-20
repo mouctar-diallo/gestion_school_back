@@ -11,7 +11,8 @@ class SurchargeTokenEvent
         $user = $event->getUser();
         $data = $event->getData();//recupere les donnees du user encours
         $data['archive'] = $user->getArchive();
-
+        $data['id']= $user->getId();
+        
         $event->setData($data);
     }
 }

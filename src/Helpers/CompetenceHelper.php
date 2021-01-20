@@ -52,7 +52,7 @@ class CompetenceHelper
        if (count($erreur) > 0) {  
          return $erreur;
        }else{
-        $this->em->flush(); 
+        return $competence;
        }
     }
 

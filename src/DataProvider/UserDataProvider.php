@@ -35,13 +35,13 @@ class UserDataProvider implements CollectionDataProviderInterface, RestrictedDat
             ->where('test.archive = :archive')
             ->setParameter('archive', 0);
         
-        $this->paginationExtension->applyToCollection($queryBuilder, new QueryNameGenerator(), $resourceClass, $operationName, $this->context);
+        
+        //$this->paginationExtension->applyToCollection($queryBuilder, new QueryNameGenerator(), $resourceClass, $operationName, $this->context);
 
         if ($this->paginationExtension instanceof QueryResultCollectionExtensionInterface
             && $this->paginationExtension->supportsResult($resourceClass, $operationName, $this->context)) {
             return $this->paginationExtension->getResult($queryBuilder, $resourceClass, $operationName, $this->context);
-        } 
-        
+        }  
         return $queryBuilder->getQuery()->getResult();
     }
 

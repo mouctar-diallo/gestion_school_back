@@ -13,6 +13,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class GroupeCompetenceController extends AbstractController
 {
+    private $em;
+    public function __construct(EntityManagerInterface $em){
+        $this->em = $em;
+    }
     //create groupe de competence
     public function create(Request $request, GroupeCompetenceHelper $helper): Response
     {
@@ -30,11 +34,12 @@ class GroupeCompetenceController extends AbstractController
     public function addCompetenceAndLevels(Request $request, CompetenceHelper $helperCompetence)
     {
         $competence = json_decode($request->getContent(), true);
-        $testValide = $helperCompetence->addCompetenceAndLevels($competence);
-        if ($testValide != null) {
-            return $this->json(404);
-        }else{
+        $competence = $helperCompetence->addCompetenceAndLevels($competence);
+        if ($competence) {
+            $this->em->flush();
             return $this->json("created", Response::HTTP_CREATED);
+        }else{
+            return $this->json(404);
         }
         
     }

@@ -30,31 +30,23 @@ class GroupeCompetenceHelper
                 ->setIsdeleted(0)
                 ->setLibelle($groupejson['libelle'])
                 ->setDescription($groupejson['description']);
-        //add competence relier
+        //add competence 
         if (isset($groupejson['competence']))
         {
             for ($i= 0; $i<count($groupejson['competence']);$i++){
-                $competence = new Competence();
-                //add
-                if(isset($groupejson['competence'][$i]['libelle'])){
-                    $competence->setLibelle($groupejson['competence'][$i]['libelle']);
-                    $groupeCompetence->addCompetence($competence);
+                //affectations
+                $c =  $this->repo->find($groupejson['competence'][$i]['id']);
+                if($c){
+                    $groupeCompetence->addCompetence($c);
+                }
+            }
+            //validation
+            $erreur = $this->validator->validate($groupeCompetence);
+            if (count($erreur) > 0) {  
+                return $erreur;
                 }else{
-                    //affectations
-                    $c =  $this->repo->find($groupejson['competence'][$i]['id']);
-                    if($c){
-                        $groupeCompetence->addCompetence($c);
-                    }
-
-                }
-                //validation
-                $erreur = $this->validator->validate($groupeCompetence);
-                if (count($erreur) > 0) {  
-                    return $erreur;
-                  }else{
-                    $this->em->persist($groupeCompetence);
-                    $this->em->flush(); 
-                }
+                $this->em->persist($groupeCompetence);
+                $this->em->flush(); 
             }
         }
     }
