@@ -48,30 +48,33 @@ class PromosController extends AbstractController
         $this->encode = $encode;
         $this->validator = $validator;
     }
-    
+    //ajout d'une promotion
     public function addPromos(Request $request, PromoHelper $helper)
     {
         $infosjson = $request->request->all();
         //recuperons le fichier excel des apprenants
         $FileExcel = $request->files->get("ExcelFile");
         unset($infosjson['referentiels']);
+        unset($infosjson['tabEmails']);
         $promos = $this->serialize->denormalize($infosjson, Promos::class);
         $promos->setEtat("encours");
         $referentiel = $this->ref->find($request->request->get('referentiels'));
         if ($referentiel) {
             $promos->setReferentiels($referentiel);
         }
+        $profil = $this->profilRepo->findOneByLibelle("Apprenant");
         //get All students in the Excel file in array
         $students = $helper->ApprenantFromFileExcel($FileExcel);   
         if ($students) { 
-            $profil = $this->profilRepo->findOneByLibelle("Apprenant");
             foreach ($students as  $student){
                 $apprenant = $this->serialize->denormalize($student, Apprenant::class);
                 //testons si l'email ne se trouve pas dans la BDD
                 $ExistEmail = $this->apprenant->findOneByEmail($apprenant->getEmail());
                 if (!$ExistEmail){
                     $apprenant->setProfil($profil);
-                    $apprenant->setPassword($this->encode->encodePassword($apprenant,$apprenant->getPassword()));
+                    if ($apprenant->getPassword()) {
+                        $apprenant->setPassword($this->encode->encodePassword($apprenant,$apprenant->getPassword()));
+                    }
                     //send mail
                     $this->userHelper->sendMail($apprenant->getEmail());
                     $this->em->persist($apprenant);
@@ -79,6 +82,23 @@ class PromosController extends AbstractController
                     $apprenant->setPromos($promos);
                 }
             }  
+        }
+
+        $apprenanttAgInput = $request->request->get('tabEmails');
+        //si ya un tableau d'email on ajoute
+        if (isset($apprenanttAgInput)) {
+            for($i = 0;$i<count($apprenanttAgInput);$i++){
+                $ExistEmail = $this->apprenant->findOneByEmail($apprenanttAgInput[$i]);
+                if (!$ExistEmail) {
+                    $apprenant = new Apprenant();
+                    $apprenant->setProfil($profil);
+                    $apprenant->setEmail($apprenanttAgInput[$i]);
+                    $this->userHelper->sendMail($apprenant->getEmail());
+                    $this->em->persist($apprenant);
+                    $promos->addApprenant($apprenant);
+                    $apprenant->setPromos($promos);
+                }
+            }
         }
         $avatar = $this->userHelper->traitementImage($request);
         $promos->setAvatar($avatar);

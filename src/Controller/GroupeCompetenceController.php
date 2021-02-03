@@ -54,7 +54,9 @@ class GroupeCompetenceController extends AbstractController
         return $this->json("edited", Response::HTTP_OK);
     }
 
-    //put groupe competence d'un groupe
+    /**
+     * @Route("/api/admin/grpecompetences/{id}",name="edit_groupe",methods={"PUT"})
+     */
     public function addOrRemoveCompetence($id,GroupeCompetenceHelper $helper,Request $request)
     {
         $postaman = json_decode($request->getContent(), true);

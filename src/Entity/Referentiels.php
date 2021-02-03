@@ -124,7 +124,7 @@ class Referentiels
 
     /**
      * @ORM\Column(type="blob")
-     *
+     * @Groups({"referentiels":"read"})
      */
     private $programme;
 
@@ -281,7 +281,11 @@ class Referentiels
 
     public function getProgramme()
     {
-        return $this->programme;
+        $programme = $this->programme;
+        if ($programme){
+            return base64_encode(stream_get_contents($programme));
+        }
+        return $programme;
     }
 
     public function setProgramme($programme): self

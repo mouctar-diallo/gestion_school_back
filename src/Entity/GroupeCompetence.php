@@ -43,23 +43,22 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *     },
  *   },
  * 
- *      itemOperations={
+ *     itemOperations={
  *          "get_groupe"={
  *              "method"="GET",
  *              "path"="/admin/grpecompetences/{id}",
  *              "normalization_context"={"groups"={"g_read"}}
+ *          },
+ *          
+ *          "modification"= {
+ *  *              "method"="PUT",
+ *              "route_name"="edit_groupe_competence",
  *          },
  * 
  *           "get_competences"={
  *              "method"="GET",
  *              "path"="/admin/grpecompetences/{id}/competences",
  *              "normalization_context"={"groups"={"grp_read"}}
- *          },
- * 
- *          "edit_groupe"={
- *              "method"="PUT",
- *              "normalization_context"={"groups"={"grp_read"}},
- *              "route_name"="edit_groupe"
  *          },
  * 
  *          "archive_groupe"={

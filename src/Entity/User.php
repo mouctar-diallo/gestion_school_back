@@ -6,11 +6,13 @@ use App\Entity\Apprenant;
 use App\Entity\Formateur;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
+use ApiPlatform\Core\Annotation\ApiFilter;
 use Doctrine\ORM\Mapping\DiscriminatorMap;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -21,10 +23,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\DiscriminatorMap({"formateur"="Formateur","CM"= "Cm", "apprenant"="Apprenant","admin"="User"})
  * 
  * @ApiResource(
- *      attributes={
- *          "pagination_enabled"=true,
- *          "pagination_items_per_page"=7
- *      },
  *      collectionOperations={
  *          "get_users"={
  *              "method"="GET",
@@ -60,6 +58,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *      }
  * )
  * 
+ * @ApiFilter(SearchFilter::class, properties={"email": "partial"})
  * @UniqueEntity("email",message="l'adresse email doit etre unique")
  */
 class User implements UserInterface

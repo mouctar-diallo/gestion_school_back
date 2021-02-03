@@ -46,7 +46,7 @@ get_comp_gc_ref:
    methods: ['GET']
 
 #competencess d'un groupe de competences d'un referentiel
-edit_groupe:
+edit_groupe_competence:
    path:  /api/admin/grpecompetences/{id}
    controller: App\Controller\GroupeCompetenceController::addOrRemoveCompetence
    methods: ['PUT']
