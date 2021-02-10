@@ -88,7 +88,8 @@ class User implements UserInterface
      * @ORM\Column(type="string")
      * 
      * @Assert\NotBlank(message="le mot de passe est obligatoire")
-     */
+     *
+     **/
     protected $password;
 
     /**

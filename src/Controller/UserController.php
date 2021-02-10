@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserController extends AbstractController
 {
@@ -22,12 +23,14 @@ class UserController extends AbstractController
     private $helper;
     private $repo;
     private $profilrepo;
-    public function __construct(EntityManagerInterface $em,UserHelper $helper,UserRepository $repo,ProfilRepository $profilrepo)
+    private $encode;
+    public function __construct(EntityManagerInterface $em,UserHelper $helper,UserRepository $repo,ProfilRepository $profilrepo, UserPasswordEncoderInterface $encode)
     {
         $this->em = $em;
         $this->helper = $helper;
         $this->repo = $repo;
         $this->profilrepo = $profilrepo;
+        $this->encode = $encode;
     }
     
     //creation d'un user
@@ -58,7 +61,12 @@ class UserController extends AbstractController
             if ($d !== "profil" && $d!=="image" && $d!=="confirm") {
                 $setProperty = 'set'.ucfirst($d);
                 if ($value !== "") {
-                    $user->$setProperty($value);
+                    //encode password
+                    if ($d=="password") {
+                        $user->setPassword($this->encode->encodePassword($user,$value));
+                    }else{
+                        $user->$setProperty($value);
+                    }
                 }
             }
         }
@@ -67,8 +75,11 @@ class UserController extends AbstractController
             $user->setProfil($profil[0]);
         }
         $image = $this->helper->traitementImage($request);
-        if ($image==false) {
-           $user->setAvatar($data['image']);
+        if (!$image) {
+            //$user->setAvatar(null);
+           /*si image n'existe pas il le met a null (definit sur l'entité user nullable=true)
+            si user a deja une image et que ya pas d'image sur la requette il laisse l'image existante
+           */
         }else{ $user->setAvatar($image);}
         
         $this->em->flush();

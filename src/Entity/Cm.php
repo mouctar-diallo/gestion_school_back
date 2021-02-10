@@ -10,7 +10,18 @@ use ApiPlatform\Core\Annotation\ApiResource;
 /**
  * @ORM\Entity(repositoryClass=CMRepository::class)
  * 
- *  @ApiResource()
+ *  @ApiResource(
+ * normalizationContext={"groups"={"u_read"}},
+ * *   itemOperations={
+ *          
+ *          "get_one_cm"={
+ *              "method"="GET",
+ *              "path"="/cm/{id}",
+*               "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR') or is_granted('ROLE_CM') or object==user)",
+*               "security_message" = "access denied",
+ *          }
+ *    }
+ * )
  */
 class Cm extends User
 {

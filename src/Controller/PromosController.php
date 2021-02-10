@@ -94,6 +94,8 @@ class PromosController extends AbstractController
                     $apprenant->setProfil($profil);
                     $apprenant->setEmail($apprenanttAgInput[$i]);
                     $this->userHelper->sendMail($apprenant->getEmail());
+                    //encode password 
+                    $apprenant->setPassword($this->encode->encodePassword($apprenant,$apprenant->getPassword()));
                     $this->em->persist($apprenant);
                     $promos->addApprenant($apprenant);
                     $apprenant->setPromos($promos);

@@ -40,7 +40,7 @@ class UserHelper
         $user->setPassword($this->encode->encodePassword($user,$postman['password']));
         //traitement image user
         if ($this->traitementImage($request)==false) {
-            $user->setAvatar($postman['image']);
+            $user->setAvatar(null);
         }else{ 
             $image = $this->traitementImage($request);
             $user->setAvatar($image);
