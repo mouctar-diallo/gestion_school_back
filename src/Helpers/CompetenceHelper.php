@@ -63,14 +63,26 @@ class CompetenceHelper
         if ($comp && isset($niveaux['niveau'])){
             $comp->setLibelle($niveaux['libelle']);
             for ($i=0; $i < count($niveaux['niveau']); $i++) { 
-                $niveau = $this->niveauRepository->find($niveaux['niveau'][$i]['id']);
-                if ($niveau) {
-                    $niveau->setLibelle($niveaux['niveau'][$i]['libelle']);
-                    $niveau->setCritereEvaluation($niveaux['niveau'][$i]['critere_evaluation']);
-                    $niveau->setGroupeActions($niveaux['niveau'][$i]['groupe_actions']);
-                    $niveau->setCompetence($comp);
-                    $this->em->flush();
+                if (isset($niveaux['niveau'][$i]['id'])) {
+                    $niveau = $this->niveauRepository->find($niveaux['niveau'][$i]['id']);
+                    if ($niveau) {
+                        $niveau->setLibelle($niveaux['niveau'][$i]['libelle']);
+                        $niveau->setCritereEvaluation($niveaux['niveau'][$i]['critere_evaluation']);
+                        $niveau->setGroupeActions($niveaux['niveau'][$i]['groupe_actions']);
+                        $niveau->setCompetence($comp);
+                        $this->em->flush();
+                    }
+                }else{
+                        $level = new Niveau();
+                        $level->setLibelle($niveaux['niveau'][$i]['libelle']);
+                        $level->setCritereEvaluation($niveaux['niveau'][$i]['critere_evaluation']);
+                        $level->setGroupeActions($niveaux['niveau'][$i]['groupe_actions']);
+                        $level->setCompetence($comp);
+                        $this->em->persist($level);
+                        $this->em->flush();
                 }
+                
+                
             }
         }
     }
