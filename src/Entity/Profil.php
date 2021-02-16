@@ -36,6 +36,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *    "get_users_profil"={
  *          "method"="GET",
  *          "path"= "/profils/{id}/users",
+ *          "route_name"="user_dun_profil",
  *          "normalization_context"={"groups"={"p_users_read"}}
  *     },
  *  },

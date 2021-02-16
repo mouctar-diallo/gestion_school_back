@@ -31,4 +31,14 @@ class ApprenantRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
+    // public function getApprenantAttente()
+    // {
+    //     return $this->createQueryBuilder('u')
+    //       ->andWhere('u.promos = :val')
+    //       ->setParameter('u',null)
+    //       ->getQuery()
+    //       ->getResult()
+    //     ;
+    // }
 }

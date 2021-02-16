@@ -44,5 +44,4 @@ class UserDataProvider implements CollectionDataProviderInterface, RestrictedDat
         }  
         return $queryBuilder->getQuery()->getResult();
     }
-
 }

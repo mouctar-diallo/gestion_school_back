@@ -15,6 +15,12 @@ edit_users:
     methods: ['POST']
     controller: App\Controller\UserController::editUser
 
+#ar
+users_archive:
+   path: /api/admin/archive
+   methods: ['GET']
+   controller: App\Controller\UserController::usersArchiver
+
 #add un utilisateur
 add_grp_competence:
     path: /api/admin/grpecompetences
@@ -92,10 +98,18 @@ add_promo:
    controller: App\Controller\PromosController::addPromos
    methods: ['POST']
 
+
 app_groupe_promo:
    path:  /api/admin/promo/{idp}/groupes/{id}/apprenants
    controller: App\Controller\PromosController::getApprenantGroupePromo
    methods: ['GET']
+
+#les users d'un profil
+user_dun_profil:
+   path:  /api/admin/profils/{id}/users
+   controller: App\Controller\UserController::userDuProfil
+   methods: ['GET']
+
 
 #add or delete apprenants in promo
 apprenant_promo:

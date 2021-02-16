@@ -1,4 +1,5 @@
 api_platform:
+    title: 'FIL ROUGE SYMFONY BY MOUCTAR DIALLO'
     mapping:
         paths: ['%kernel.project_dir%/src/Entity']
     patch_formats:

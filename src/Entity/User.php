@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Admin;
 use App\Entity\Apprenant;
 use App\Entity\Formateur;
 use Doctrine\ORM\Mapping as ORM;
@@ -20,7 +21,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * 
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name = "type", type = "string")
- * @ORM\DiscriminatorMap({"formateur"="Formateur","CM"= "Cm", "apprenant"="Apprenant","admin"="User"})
+ * @ORM\DiscriminatorMap({"formateur"="Formateur","CM"= "Cm", "apprenant"="Apprenant","admin"="Admin","user"="User"})
  * 
  * @ApiResource(
  *      collectionOperations={
@@ -54,6 +55,11 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *              "path"="/admin/users/{id}"
  *          },
  * 
+ *          "archive_user_list"={
+ *              "method"="GET",
+ *              "route_name"="users_archive"
+ *          },
+ * 
  *      
  *      }
  * )
@@ -68,7 +74,7 @@ class User implements UserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * 
-     * @Groups({"u_read","promo:read","rfg:read","gp_read","promo_one_br","promo_gr_br","br_app_ass","student"})
+     * @Groups({"u_read","promo:read","rfg:read","gp_read","promo_one_br","promo_gr_br","br_app_ass","student","p_users_read"})
      */
     private $id;
 
@@ -121,6 +127,8 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="integer" , options={"default": 0})
+     * 
+     * @Groups({"p_users_read"})
      * 
      */
     protected $archive;

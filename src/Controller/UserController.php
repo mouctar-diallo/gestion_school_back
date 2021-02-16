@@ -41,11 +41,8 @@ class UserController extends AbstractController
         $profil = "/api/admin/profils/".$profil[0]->getId();
         $userPostman['profil'] = $profil;
         $profilUser = $serializer->denormalize($userPostman['profil'] , Profil::class);
-        if ($profilUser->getLibelle()!=="ADMIN") {
-            $user = $serializer->denormalize($userPostman,"App\Entity\\".ucfirst(strtolower($profilUser->getLibelle())));
-        }else{
-            $user = $user = $serializer->denormalize($userPostman,'App\Entity\User');
-        }
+        //denormalisons le user en fonction de son profil
+        $user = $serializer->denormalize($userPostman,"App\Entity\\".ucfirst(strtolower($profilUser->getLibelle())));
         $helperUser->createUser($request,$user,$userPostman,$profilUser);
         
         return $this->json('create',Response::HTTP_OK);
@@ -85,6 +82,31 @@ class UserController extends AbstractController
         $this->em->flush();
 
         return $this->json("edited successfully",Response::HTTP_OK);
+    }
+
+
+    //users archiver
+    public function usersArchiver()
+    {
+        $userArchives = $this->repo->getUsersByArchiveEgal(1);
+        if ($userArchives) {
+            return $this->json($userArchives, Response::HTTP_OK,[],['groups'=>'u_read']);
+        }
+        return $this->json("pas de user archiver");
+    }
+
+
+    //les users d'un profil(les archives ne doit pas s'afficher)
+    public function userDuProfil($id)
+    {
+        $profil = $this->profilrepo->find($id);
+        $users = array();
+        foreach ($profil->getUsers() as $user){
+            if ($user->getArchive() == 0){
+                $users[] = $user;
+            }
+        }
+        return $this->json($users, Response::HTTP_OK,[],['groups'=>'p_users_read']);
     }
 
 }

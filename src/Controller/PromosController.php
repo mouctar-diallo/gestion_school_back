@@ -186,4 +186,13 @@ class PromosController extends AbstractController
         }
         return $this->json("promo ou groupe inexistant");
     }
+
+
+    // public function apprenantsAttente(Request $request,$id)
+    // {
+    //     $promos = $this->promos->find($id);
+    //     $appAttente = $this->apprenants->getApprenantAttente();
+
+    //     return $this->json($appAttente,Response::HTTP_OK,[],['groups'=>'attente_read']);
+    // }
 }
